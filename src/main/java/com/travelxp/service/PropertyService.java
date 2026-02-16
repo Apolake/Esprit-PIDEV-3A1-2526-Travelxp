@@ -21,6 +21,10 @@ public class PropertyService {
         return propertyRepository.findByIsActiveTrue();
     }
 
+    public List<Property> getAllPropertiesAdmin() {
+        return propertyRepository.findAll();
+    }
+
     public Optional<Property> getPropertyById(Long id) {
         return propertyRepository.findById(id);
     }
@@ -44,16 +48,51 @@ public class PropertyService {
 
     @Transactional
     public Property createProperty(Property property) {
+        validateProperty(property);
+        if (propertyRepository.existsByTitleIgnoreCaseAndAddressIgnoreCase(property.getTitle().trim(), property.getAddress().trim())) {
+            throw new IllegalArgumentException("A property with the same title and address already exists.");
+        }
         return propertyRepository.save(property);
     }
 
     @Transactional
     public Property updateProperty(Property property) {
+        validateProperty(property);
+        if (property.getId() != null && propertyRepository.existsByTitleIgnoreCaseAndAddressIgnoreCaseAndIdNot(
+                property.getTitle().trim(), property.getAddress().trim(), property.getId())) {
+            throw new IllegalArgumentException("A property with the same title and address already exists.");
+        }
         return propertyRepository.save(property);
     }
 
     @Transactional
     public void deleteProperty(Long id) {
         propertyRepository.deleteById(id);
+    }
+
+    private void validateProperty(Property property) {
+        if (property.getOwner() == null) {
+            throw new IllegalArgumentException("Owner is required.");
+        }
+        if (isBlank(property.getTitle()) || isBlank(property.getCity()) || isBlank(property.getCountry()) ||
+            isBlank(property.getAddress()) || isBlank(property.getPropertyType())) {
+            throw new IllegalArgumentException("Title, city, country, address, and type are required.");
+        }
+        if (property.getPricePerNight() == null || property.getPricePerNight().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Price per night must be positive.");
+        }
+        if (property.getMaxGuests() == null || property.getMaxGuests() <= 0) {
+            throw new IllegalArgumentException("Max guests must be positive.");
+        }
+        if (property.getBedrooms() != null && property.getBedrooms() < 0) {
+            throw new IllegalArgumentException("Bedrooms cannot be negative.");
+        }
+        if (property.getBathrooms() != null && property.getBathrooms() < 0) {
+            throw new IllegalArgumentException("Bathrooms cannot be negative.");
+        }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

@@ -1,5 +1,6 @@
 package com.travelxp.util;
 
+import com.travelxp.controller.ShellController;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,8 @@ public class StageManager {
     private final Stage primaryStage;
     private final ApplicationContext applicationContext;
     private static final String APP_STYLESHEET = "/css/styles.css";
+    private Parent shellRoot;
+    private ShellController shellController;
 
     public StageManager(ApplicationContext applicationContext, Stage stage) {
         this.primaryStage = stage;
@@ -29,7 +32,18 @@ public class StageManager {
             if (viewRootNodeHierarchy == null) {
                 throw new IllegalStateException("Unable to load view: " + view.name());
             }
-            show(viewRootNodeHierarchy, view.getTitle());
+
+            if (view == FXMLView.LOGIN) {
+                // login stays standalone (no shell)
+                shellRoot = null;
+                shellController = null;
+                show(viewRootNodeHierarchy, view.getTitle(), false);
+                return;
+            }
+
+            ensureShell();
+            shellController.setContent(viewRootNodeHierarchy);
+            show(shellRoot, view.getTitle(), true);
         };
 
         if (Platform.isFxApplicationThread()) {
@@ -39,12 +53,20 @@ public class StageManager {
         }
     }
 
-    private void show(Parent rootNode, String title) {
+    private void show(Parent rootNode, String title, boolean fullscreen) {
         Scene scene = prepareScene(rootNode);
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
+        primaryStage.setMaximized(true);
+
+        if (fullscreen) {
+            primaryStage.setFullScreenExitHint("");
+            primaryStage.setFullScreen(true);
+        } else {
+            primaryStage.setFullScreen(false);
+        }
 
         try {
             primaryStage.show();
@@ -86,6 +108,22 @@ public class StageManager {
             // Surface loading problems instead of failing silently so navigation issues are obvious.
             exception.printStackTrace();
             return null;
+        }
+    }
+
+    private void ensureShell() {
+        if (shellRoot != null && shellController != null) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shell.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            shellRoot = loader.load();
+            shellController = loader.getController();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new IllegalStateException("Unable to load shell layout", exception);
         }
     }
 }

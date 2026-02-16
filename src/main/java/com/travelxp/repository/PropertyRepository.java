@@ -15,6 +15,10 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByCity(String city);
     List<Property> findByCountry(String country);
 
+    @Override
+    @EntityGraph(attributePaths = {"owner", "owner.level", "reviews"})
+    List<Property> findAll();
+
     @EntityGraph(attributePaths = {"reviews"})
     List<Property> findByIsActiveTrue();
 
@@ -22,4 +26,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     @EntityGraph(attributePaths = {"reviews"})
     List<Property> findByCityAndIsActiveTrue(String city);
+
+    boolean existsByTitleIgnoreCaseAndAddressIgnoreCase(String title, String address);
+
+    boolean existsByTitleIgnoreCaseAndAddressIgnoreCaseAndIdNot(String title, String address, Long id);
 }

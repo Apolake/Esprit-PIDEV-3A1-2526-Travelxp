@@ -62,7 +62,13 @@ public class DashboardController implements Initializable {
     private Button browseButton;
 
     @FXML
+    private Button tripsButton;
+
+    @FXML
     private Button profileButton;
+
+    @FXML
+    private Button adminButton;
 
     @FXML
     private Button logoutButton;
@@ -157,8 +163,18 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
+    private void handleTrips(ActionEvent event) {
+        stageManager.switchScene(FXMLView.TRIPS);
+    }
+
+    @FXML
     private void handleViewProfile(ActionEvent event) {
         stageManager.switchScene(FXMLView.PROFILE);
+    }
+
+    @FXML
+    private void handleAdmin(ActionEvent event) {
+        stageManager.switchScene(FXMLView.ADMIN);
     }
 
     @FXML

@@ -72,6 +72,42 @@ public enum FXMLView {
         public String getFxmlFile() {
             return "/fxml/profile.fxml";
         }
+    },
+
+    TRIPS {
+        @Override
+        public String getTitle() {
+            return "TravelXP - Trips";
+        }
+
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/trips.fxml";
+        }
+    },
+
+    ADMIN {
+        @Override
+        public String getTitle() {
+            return "TravelXP - Admin";
+        }
+
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/admin.fxml";
+        }
+    },
+
+    REVIEW_COMMENTS {
+        @Override
+        public String getTitle() {
+            return "TravelXP - Review Comments";
+        }
+
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/review-comments.fxml";
+        }
     };
 
     public abstract String getTitle();

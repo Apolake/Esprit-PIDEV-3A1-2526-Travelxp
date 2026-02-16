@@ -19,7 +19,9 @@
             <ProgressBar fx:id="xpProgressBar" prefWidth="400" />
             <HBox spacing="10">
                 <Button fx:id="browseButton" text="Browse Properties" onAction="#handleBrowseProperties" />
+                <Button fx:id="tripsButton" text="Trips" onAction="#handleTrips" />
                 <Button fx:id="profileButton" text="Profile" onAction="#handleViewProfile" />
+                <Button fx:id="adminButton" text="Admin" onAction="#handleAdmin" />
                 <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" />
             </HBox>
         </VBox>
