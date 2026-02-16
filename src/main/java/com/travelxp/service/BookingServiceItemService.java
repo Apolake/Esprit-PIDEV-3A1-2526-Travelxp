@@ -1,9 +1,7 @@
 package com.travelxp.service;
 
-import com.travelxp.model.Booking;
-import com.travelxp.model.BookingServiceItem;
-import com.travelxp.model.ServiceOffering;
-import com.travelxp.repository.BookingServiceItemRepository;
+import com.travelxp.model.*;
+import com.travelxp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,44 +15,53 @@ public class BookingServiceItemService {
     @Autowired
     private BookingServiceItemRepository bookingServiceItemRepository;
 
-    public List<BookingServiceItem> getAll() {
-        return bookingServiceItemRepository.findAll();
-    }
+    @Autowired
+    private ServiceRepository serviceRepository;
 
-    public List<BookingServiceItem> getByBooking(Booking booking) {
-        return bookingServiceItemRepository.findByBooking(booking);
-    }
+    @Autowired
+    private BookingRepository bookingRepository;
 
+    // CREATE
     @Transactional
-    public BookingServiceItem save(BookingServiceItem item) {
-        validate(item);
-        if (item.getPriceAtBooking() == null && item.getService() != null) {
-            item.setPriceAtBooking(item.getService().getPrice());
-        }
-        if (item.getQuantity() == null || item.getQuantity() <= 0) {
-            item.setQuantity(1);
-        }
+    public BookingServiceItem addServiceToBooking(Long bookingId, Long serviceId, Integer quantity) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        Service service = serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new RuntimeException("Service not found"));
+
+        BookingServiceItem item = new BookingServiceItem(
+                booking,
+                service,
+                quantity,
+                service.getPrice()
+        );
+
         return bookingServiceItemRepository.save(item);
     }
 
-    @Transactional
-    public void delete(Long id) {
-        bookingServiceItemRepository.deleteById(id);
+    // READ
+    public List<BookingServiceItem> getServicesByBooking(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        return bookingServiceItemRepository.findByBooking(booking);
     }
 
-    private void validate(BookingServiceItem item) {
-        if (item.getBooking() == null) {
-            throw new IllegalArgumentException("Booking is required.");
-        }
-        if (item.getService() == null) {
-            throw new IllegalArgumentException("Service is required.");
-        }
-        if (item.getQuantity() != null && item.getQuantity() < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative.");
-        }
-        BigDecimal price = item.getPriceAtBooking();
-        if (price != null && price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price cannot be negative.");
-        }
+    // UPDATE
+    @Transactional
+    public BookingServiceItem updateQuantity(Long itemId, Integer newQuantity) {
+        BookingServiceItem item = bookingServiceItemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Service item not found"));
+
+        item.setQuantity(newQuantity);
+        return bookingServiceItemRepository.save(item);
+    }
+
+    // DELETE
+    @Transactional
+    public void removeServiceFromBooking(Long itemId) {
+        bookingServiceItemRepository.deleteById(itemId);
     }
 }
