@@ -35,6 +35,8 @@ public class AdminDashboardController {
     @FXML private TableColumn<UserViewModel, Integer> idCol;
     @FXML private TableColumn<UserViewModel, String> usernameCol;
     @FXML private TableColumn<UserViewModel, String> emailCol;
+    @FXML private TableColumn<UserViewModel, String> bioCol;
+    @FXML private TableColumn<UserViewModel, String> imageCol;
     @FXML private TableColumn<UserViewModel, String> roleCol;
     @FXML private TableColumn<UserViewModel, Integer> xpCol;
     @FXML private TableColumn<UserViewModel, Integer> levelCol;
@@ -50,6 +52,8 @@ public class AdminDashboardController {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        bioCol.setCellValueFactory(new PropertyValueFactory<>("bio"));
+        imageCol.setCellValueFactory(new PropertyValueFactory<>("profileImage"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
         xpCol.setCellValueFactory(new PropertyValueFactory<>("xp"));
         levelCol.setCellValueFactory(new PropertyValueFactory<>("level"));
@@ -107,6 +111,8 @@ public class AdminDashboardController {
         actionsCol.setCellFactory(cellFactory);
     }
 
+    private String selectedImagePath = "";
+
     private void handleEditUser(UserViewModel model) {
         Dialog<User> dialog = new Dialog<>();
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
@@ -130,12 +136,26 @@ public class AdminDashboardController {
         ComboBox<String> roleCombo = new ComboBox<>(FXCollections.observableArrayList("USER", "ADMIN"));
         roleCombo.setValue(model.getRole());
 
+        selectedImagePath = model.getProfileImage();
+        Label pathLabel = new Label(selectedImagePath == null || selectedImagePath.isEmpty() ? "No image" : "Image selected");
+        Button uploadBtn = new Button("Choose Image");
+        uploadBtn.getStyleClass().add("secondary-button");
+        uploadBtn.setOnAction(e -> {
+            javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
+            java.io.File file = fc.showOpenDialog(null);
+            if (file != null) {
+                selectedImagePath = file.getAbsolutePath();
+                pathLabel.setText(file.getName());
+            }
+        });
+
         content.getChildren().addAll(
             new Label("Username:"), usernameField,
             new Label("Email:"), emailField,
             new Label("Birthday:"), birthdayPicker,
             new Label("Bio:"), bioArea,
-            new Label("Role:"), roleCombo
+            new Label("Role:"), roleCombo,
+            new Label("Profile Image:"), new HBox(10, uploadBtn, pathLabel)
         );
 
         dialog.getDialogPane().setContent(content);
@@ -149,7 +169,7 @@ public class AdminDashboardController {
                 user.setBirthday(birthdayPicker.getValue());
                 user.setBio(bioArea.getText());
                 user.setRole(roleCombo.getValue());
-                user.setProfileImage(model.getProfileImage());
+                user.setProfileImage(selectedImagePath);
                 return user;
             }
             return null;
@@ -163,6 +183,115 @@ public class AdminDashboardController {
                 }
             } catch (SQLException e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Update Failed", e.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void handleRefresh() {
+        loadUsers();
+    }
+
+    @FXML
+    private void handleCreateUser() {
+        Dialog<User> dialog = new Dialog<>();
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        ThemeManager.applyThemeToNode(dialog.getDialogPane());
+        dialog.setTitle("Create New User");
+        dialog.setHeaderText("Enter details for the new account.");
+
+        ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setPrefWidth(400);
+
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username (3-50 chars)");
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email Address");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password (8+ chars, 1 letter, 1 number)");
+        DatePicker birthdayPicker = new DatePicker(LocalDate.now().minusYears(18));
+        TextArea bioArea = new TextArea();
+        bioArea.setPromptText("User Bio (Max 500 chars)");
+        bioArea.setPrefHeight(80);
+        ComboBox<String> roleCombo = new ComboBox<>(FXCollections.observableArrayList("USER", "ADMIN"));
+        roleCombo.setValue("USER");
+
+        selectedImagePath = "";
+        Label pathLabel = new Label("No image selected");
+        Button uploadBtn = new Button("Choose Image");
+        uploadBtn.getStyleClass().add("secondary-button");
+        uploadBtn.setOnAction(e -> {
+            javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
+            java.io.File file = fc.showOpenDialog(null);
+            if (file != null) {
+                selectedImagePath = file.getAbsolutePath();
+                pathLabel.setText(file.getName());
+            }
+        });
+
+        content.getChildren().addAll(
+            new Label("Username:"), usernameField,
+            new Label("Email:"), emailField,
+            new Label("Password:"), passwordField,
+            new Label("Birthday:"), birthdayPicker,
+            new Label("Bio:"), bioArea,
+            new Label("Role:"), roleCombo,
+            new Label("Profile Image:"), new HBox(10, uploadBtn, pathLabel)
+        );
+
+        dialog.getDialogPane().setContent(content);
+
+        final Button btCreate = (Button) dialog.getDialogPane().lookupButton(createButtonType);
+        btCreate.addEventFilter(ActionEvent.ACTION, event -> {
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String password = passwordField.getText();
+            LocalDate birthday = birthdayPicker.getValue();
+            String bio = bioArea.getText();
+
+            if (!validateRegistration(username, email, password, birthday, bio)) {
+                event.consume();
+            }
+        });
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == createButtonType) {
+                User user = new User(
+                    usernameField.getText(),
+                    emailField.getText(),
+                    passwordField.getText(),
+                    birthdayPicker.getValue(),
+                    bioArea.getText(),
+                    selectedImagePath
+                );
+                user.setRole(roleCombo.getValue());
+                return user;
+            }
+            return null;
+        });
+
+        Optional<User> result = dialog.showAndWait();
+        result.ifPresent(user -> {
+            try {
+                if (userService.registerUser(user)) {
+                    if ("ADMIN".equals(user.getRole())) {
+                        User registered = userService.getAllUsers().stream()
+                                .filter(u -> u.getUsername().equals(user.getUsername()))
+                                .findFirst().orElse(null);
+                        if (registered != null) {
+                            registered.setRole("ADMIN");
+                            userService.updateUserAsAdmin(registered);
+                        }
+                    }
+                    loadUsers();
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "User Created", "New user has been registered successfully.");
+                }
+            } catch (SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Creation Failed", e.getMessage());
             }
         });
     }
@@ -212,106 +341,6 @@ public class AdminDashboardController {
                 }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Invalid Password", "Password must be at least 8 characters.");
-            }
-        });
-    }
-
-    @FXML
-    private void handleRefresh() {
-        loadUsers();
-    }
-
-    @FXML
-    private void handleCreateUser() {
-        Dialog<User> dialog = new Dialog<>();
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-        ThemeManager.applyThemeToNode(dialog.getDialogPane());
-        dialog.setTitle("Create New User");
-        dialog.setHeaderText("Enter details for the new account.");
-
-        ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
-
-        VBox content = new VBox(10);
-        content.setPadding(new Insets(20));
-        content.setPrefWidth(400);
-
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Username (3-50 chars)");
-        TextField emailField = new TextField();
-        emailField.setPromptText("Email Address");
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Password (8+ chars, 1 letter, 1 number)");
-        DatePicker birthdayPicker = new DatePicker(LocalDate.now().minusYears(18));
-        TextArea bioArea = new TextArea();
-        bioArea.setPromptText("User Bio (Max 500 chars)");
-        bioArea.setPrefHeight(80);
-        ComboBox<String> roleCombo = new ComboBox<>(FXCollections.observableArrayList("USER", "ADMIN"));
-        roleCombo.setValue("USER");
-
-        content.getChildren().addAll(
-            new Label("Username:"), usernameField,
-            new Label("Email:"), emailField,
-            new Label("Password:"), passwordField,
-            new Label("Birthday:"), birthdayPicker,
-            new Label("Bio:"), bioArea,
-            new Label("Role:"), roleCombo
-        );
-
-        dialog.getDialogPane().setContent(content);
-
-        final Button btCreate = (Button) dialog.getDialogPane().lookupButton(createButtonType);
-        btCreate.addEventFilter(ActionEvent.ACTION, event -> {
-            String username = usernameField.getText();
-            String email = emailField.getText();
-            String password = passwordField.getText();
-            LocalDate birthday = birthdayPicker.getValue();
-            String bio = bioArea.getText();
-
-            if (!validateRegistration(username, email, password, birthday, bio)) {
-                event.consume();
-            }
-        });
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == createButtonType) {
-                User user = new User(
-                    usernameField.getText(),
-                    emailField.getText(),
-                    passwordField.getText(),
-                    birthdayPicker.getValue(),
-                    bioArea.getText(),
-                    "" // Default empty profile image
-                );
-                user.setRole(roleCombo.getValue());
-                return user;
-            }
-            return null;
-        });
-
-        Optional<User> result = dialog.showAndWait();
-        result.ifPresent(user -> {
-            try {
-                if (userService.registerUser(user)) {
-                    // If created as admin, we might need to manually update the role 
-                    // because registerUser defaults to 'USER' in the SQL level if not handled.
-                    // However, we updated User.java to have a role field.
-                    // Let's ensure registerUser uses the role from the object.
-                    // I will check UserService.registerUser next.
-                    if ("ADMIN".equals(user.getRole())) {
-                        User registered = userService.getAllUsers().stream()
-                                .filter(u -> u.getUsername().equals(user.getUsername()))
-                                .findFirst().orElse(null);
-                        if (registered != null) {
-                            registered.setRole("ADMIN");
-                            userService.updateUserAsAdmin(registered);
-                        }
-                    }
-                    loadUsers();
-                    showAlert(Alert.AlertType.INFORMATION, "Success", "User Created", "New user has been registered successfully.");
-                }
-            } catch (SQLException e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Creation Failed", e.getMessage());
             }
         });
     }
