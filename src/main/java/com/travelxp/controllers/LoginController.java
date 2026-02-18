@@ -42,7 +42,7 @@ public class LoginController {
             User user = userService.login(email, password);
             if (user != null) {
                 Main.setSession(new UserSession(user));
-                changeScene(event, "/com/travelxp/views/profile.fxml");
+                changeScene(event, "/com/travelxp/views/dashboard.fxml");
             } else {
                 showAlert("Error", "Login failed", "Invalid email or password.");
             }

@@ -82,11 +82,6 @@ public class DashboardController {
                 
                 xpLabel.setText(currentXp + " / " + nextLevelXp + " XP");
                 
-                // For progress bar, we want it to fill as we approach the next level.
-                // However, levels are absolute thresholds.
-                // If Level 1 is 0-50, and I have 25, progress is 50%.
-                // If Level 2 is 50-120, and I have 60, progress is (60-50)/(120-50) = 10/70 = ~14%.
-                
                 double progress;
                 if (currentLevel == 1) {
                     progress = (double) currentXp / nextLevelXp;
