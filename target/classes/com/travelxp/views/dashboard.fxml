@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.travelxp.controllers.DashboardController" styleClass="root">
    <left>
@@ -25,22 +27,38 @@
                <children>
                   <Button maxWidth="Infinity" styleClass="nav-button, nav-button-active" text="Dashboard">
                      <graphic>
-                        <Region style="-fx-shape: 'M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z'; -fx-background-color: -fx-accent; -fx-min-width: 18px; -fx-min-height: 18px; -fx-max-width: 18px; -fx-max-height: 18px;"/>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-home-page-50.png" />
+                           </image>
+                        </ImageView>
                      </graphic>
                   </Button>
                   <Button onAction="#handleTasks" maxWidth="Infinity" styleClass="nav-button" text="Tasks">
                      <graphic>
-                        <Region style="-fx-shape: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'; -fx-background-color: -fx-text-muted; -fx-min-width: 18px; -fx-min-height: 18px; -fx-max-width: 18px; -fx-max-height: 18px;"/>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-to-do-list-50.png" />
+                           </image>
+                        </ImageView>
                      </graphic>
                   </Button>
                   <Button onAction="#handleEditProfile" maxWidth="Infinity" styleClass="nav-button" text="Edit Profile">
                      <graphic>
-                        <Region style="-fx-shape: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'; -fx-background-color: -fx-text-muted; -fx-min-width: 18px; -fx-min-height: 18px; -fx-max-width: 18px; -fx-max-height: 18px;"/>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-pencil-50.png" />
+                           </image>
+                        </ImageView>
                      </graphic>
                   </Button>
                   <Button onAction="#handleChangePassword" maxWidth="Infinity" styleClass="nav-button" text="Security">
                      <graphic>
-                        <Region style="-fx-shape: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z'; -fx-background-color: -fx-text-muted; -fx-min-width: 18px; -fx-min-height: 18px; -fx-max-width: 18px; -fx-max-height: 18px;"/>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
                      </graphic>
                   </Button>
                </children>
@@ -51,7 +69,15 @@
                   <Insets bottom="30" left="20" right="20"/>
                </padding>
                <children>
-                  <Button onAction="#handleLogout" maxWidth="Infinity" styleClass="secondary-button" text="Logout" style="-fx-text-fill: #CF6679; -fx-border-color: #CF6679;" />
+                  <Button onAction="#handleLogout" maxWidth="Infinity" styleClass="secondary-button" text="Logout" style="-fx-text-fill: #CF6679; -fx-border-color: #CF6679;">
+                     <graphic>
+                        <ImageView fitHeight="16" fitWidth="16">
+                           <image>
+                              <Image url="@../../../icons/icons8-advance-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
          </children>

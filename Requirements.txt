@@ -1,292 +1,73 @@
-📄 UPDATED REQUIREMENTS DOCUMENT
-Project: User Management + Gamification + Admin Panel
+1️⃣ Notifications / Activity Feed
 
-Platform: JavaFX Full-Screen Desktop | JDK 25 | Maven | MySQL | JDBC
+Display real-time user activity (profile updates, XP gains)
 
-1️⃣ GOALS
+Could be a sidebar or pop-up system
 
-Add Admin Login separate from regular users
+For admins: see user actions in one glance and search bar for admin table
 
-Admins can view, edit, and delete users
+2️⃣ Achievements / Badges System
 
-Admin actions trigger XP changes for users if applicable
+Expand gamification: assign badges for milestones
 
-Maintain security and full-screen modern UI
+Examples:
 
-Keep existing Dashboard, Gamification Engine, and User Management intact
+Completed profile → “Profile Builder” badge
 
-2️⃣ DATABASE UPDATES
-2.1 Add role field to users table
-ALTER TABLE users
-ADD COLUMN role ENUM('USER','ADMIN') DEFAULT 'USER';
+Logged in 7 days in a row → “Regular Traveler” badge
 
+XP milestones → “Rising Explorer” badge
 
-Default role = USER
+Show badges on dashboard (animated, colorful, hoverable tooltips)
 
-Admins = ADMIN
+add a lot more badges based on what you think is appropriate, and add more titles for levels up to level 40
 
-Only ADMIN can access admin panel
+3️⃣ Leaderboards
 
-2.2 Admin Table (Optional)
+Show top users by XP or levels
 
-If you want separate table for admins:
+Motivates engagement
 
-CREATE TABLE admins (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+Can be admin-only or visible to all users
 
+4️⃣ User Settings / Preferences
 
-Using role field in users table is simpler; recommended for current system.
+Notifications toggle
 
-3️⃣ ADMIN LOGIN
+5️⃣ Admin Reports
 
-Login screen detects role after authentication
+Export user stats: CSV/Excel
 
-Admin users redirect to Admin Dashboard
+XP / level distribution
 
-Regular users redirect to User Dashboard
+Account creation trends
 
-Fields:
+6️⃣ Security & Account Recovery
 
-Email / Username
+Forgot password functionality with email verification
 
-Password
+Account lockout after failed login attempts
 
-Validation:
+Admin forced password reset for suspicious activity
 
-Verify BCrypt password hash
+7️⃣ UI Enhancements
 
-Role must be ADMIN to access admin panel
+Animations: XP bar, badges, hover cards
 
-Generic error for invalid credentials (do not leak role info)
+Smooth transitions between dashboards / modals
 
-4️⃣ ADMIN DASHBOARD
-4.1 Layout
+Profile image upload preview before saving
 
-BorderPane Layout (full-screen):
+Tooltip hints and progress notifications
 
-BorderPane
- ├── Top: Header Bar
- ├── Left: Admin Sidebar
- ├── Center: User Management Panel
- └── Right: Optional User Stats / Notifications
+8️⃣ Multi-Action XP System
 
+Reward XP for more actions:
 
-Sidebar:
+Logging in consecutive days
 
-Dashboard
+Updating profile elements
 
-Users
+Completing badges
 
-Achievements / Gamification Stats
-
-Logout
-
-4.2 User Management Panel (Center)
-
-TableView of all users
-
-Columns:
-
-ID
-
-Username
-
-Email
-
-Birthday
-
-Bio
-
-Profile Image (thumbnail)
-
-XP
-
-Level
-
-Title
-
-Role
-
-Actions:
-
-Edit User (all editable fields except password unless admin resets it)
-
-Delete User
-
-Promote/Demote User Role (USER ↔ ADMIN optional)
-
-Reset Password (admin can set temporary password → hashed)
-
-4.3 Admin Profile / Dashboard
-
-Admin can see own stats
-
-Gamification optional
-
-Quick links to edit users
-
-5️⃣ SERVICE LAYER UPDATES
-
-UserService.java updates:
-
-loginAdmin(email, password) → returns User with role = ADMIN
-
-updateUserAsAdmin(User updatedUser) → edit fields for any user
-
-deleteUserAsAdmin(int userId) → delete selected user
-
-resetPasswordAsAdmin(int userId, String newPassword) → hash and update
-
-Direct JDBC usage inside UserService
-
-GamificationService:
-
-Admin actions do not automatically give XP, unless desired
-
-Optionally, XP can be awarded when user updates profile
-
-6️⃣ UI UPDATES
-6.1 Login Screen
-
-Role detection after login
-
-Optional: dropdown to select “Admin” or “User” (optional if role auto-detected by email)
-
-6.2 Admin Dashboard (Modern Design)
-
-Left Sidebar:
-
-Dashboard
-
-Users
-
-Logout
-
-Center Panel:
-
-TableView of users (scrollable)
-
-Cards for XP / Level / Title optional
-
-Hover and selection effects
-
-Buttons for Edit, Delete, Reset Password
-
-Edit User Modal (Dialog):
-
-TextFields for:
-
-Username
-
-Email
-
-Birthday
-
-Bio
-
-Profile Image path
-
-Role dropdown (USER/ADMIN)
-
-Save / Cancel buttons
-
-Delete Confirmation Dialog:
-
-Require confirmation before deleting user
-
-Reset Password Dialog:
-
-Admin enters temporary password
-
-Automatically hashed
-
-7️⃣ SECURITY REQUIREMENTS
-
-Admin passwords stored hashed (BCrypt)
-
-Only users with role = ADMIN can access admin panel
-
-Use PreparedStatement for all queries
-
-Prevent SQL injection
-
-Validate all input before DB update
-
-Admin cannot delete themselves
-
-8️⃣ VALIDATION RULES
-Field	Rule
-Username	3–50 chars
-Email	Valid format, unique
-Password	8+ chars, letter + number
-Birthday	Not future
-Bio	Max 500 chars
-Role	USER / ADMIN only
-9️⃣ UX & MODERN UI GUIDELINES
-
-Maintain existing dark modern theme (#121212)
-
-Sidebar and header consistent with user dashboard
-
-Highlight selected user in TableView
-
-Use modal dialogs for edit, delete, and reset password
-
-Hover effects, subtle shadows, rounded corners (15px)
-
-Gamification info displayed in card or inline with TableView
-
-🔟 DEVELOPMENT PHASES
-
-Add role column to users table
-
-Update UserService login to detect admin
-
-Implement Admin Dashboard FXML + Controller
-
-Add TableView with user list
-
-Add Edit / Delete / Reset Password functionality
-
-Integrate JDBC queries directly in UserService for admin actions
-
-Add input validation and security checks
-
-Test all admin workflows
-
-Apply modern UI styles, hover effects, modal dialogs
-
-Test role separation: Admin vs User
-
-1️⃣1️⃣ COMPLETION CRITERIA
-
-System is complete when:
-
-Admin can login successfully
-
-Admin sees full user list with all required columns
-
-Admin can edit any user profile fields (including role)
-
-Admin can delete users (except themselves)
-
-Admin can reset password (hashed)
-
-UI is modern, clean, responsive, and visually consistent
-
-Role-based login redirects users/admins correctly
-
-If you want next, Your Majesty, I can produce the full JavaFX Admin Dashboard FXML + Controller + UserService updates including:
-
-TableView with all users
-
-Edit / Delete / Reset Password modals
-
-Role management dropdown
-
-XP / Level / Title display inline
+Consider “daily challenges” for extra XP

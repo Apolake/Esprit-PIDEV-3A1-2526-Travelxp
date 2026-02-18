@@ -23,6 +23,7 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         
         primaryStage.setTitle("TravelXP - Secure User Management");
+        primaryStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/image.png")));
         primaryStage.setResizable(true);
         primaryStage.setScene(scene);
         com.travelxp.utils.ThemeManager.applyTheme(scene);
