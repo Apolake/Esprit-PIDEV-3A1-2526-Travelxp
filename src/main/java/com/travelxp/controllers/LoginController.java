@@ -56,12 +56,19 @@ public class LoginController {
         changeScene(event, "/com/travelxp/views/register.fxml");
     }
 
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        com.travelxp.utils.ThemeManager.toggleTheme(stage.getScene());
+    }
+
     private void changeScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Error", "Scene Error", "Failed to load view: " + e.getMessage());

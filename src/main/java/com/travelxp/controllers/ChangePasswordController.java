@@ -48,6 +48,12 @@ public class ChangePasswordController {
         changeScene(event, "/com/travelxp/views/dashboard.fxml");
     }
 
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        com.travelxp.utils.ThemeManager.toggleTheme(stage.getScene());
+    }
+
     private boolean validateInput(String current, String newPwd, String confirm) {
         if (current.isEmpty() || newPwd.isEmpty() || confirm.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Error", "Empty Fields", "Please fill in all fields.");
@@ -77,6 +83,7 @@ public class ChangePasswordController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Scene Error", "Failed to load view: " + e.getMessage());

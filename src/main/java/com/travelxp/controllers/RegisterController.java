@@ -69,6 +69,12 @@ public class RegisterController {
         changeScene(event, "/com/travelxp/views/login.fxml");
     }
 
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        com.travelxp.utils.ThemeManager.toggleTheme(stage.getScene());
+    }
+
     private boolean validateInput(String username, String email, String password, String confirmPassword, LocalDate birthday, String bio) {
         if (username.length() < 3 || username.length() > 50) {
             showAlert(Alert.AlertType.ERROR, "Error", "Invalid Username", "Username must be between 3 and 50 characters.");
@@ -118,6 +124,7 @@ public class RegisterController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Scene Error", "Failed to load view: " + e.getMessage());

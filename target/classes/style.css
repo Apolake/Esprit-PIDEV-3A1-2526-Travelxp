@@ -1,162 +1,137 @@
-/* Modern Dark Theme for TravelXP */
-
+/* Base Styles & Variables */
 .root {
-    -fx-background-color: #121212;
+    /* Default to Dark Theme Variables */
+    -fx-primary-bg: #121212;
+    -fx-secondary-bg: #1E1E1E;
+    -fx-accent: #C9A227;
+    -fx-text-main: #FFFFFF;
+    -fx-text-muted: #B0B0B0;
+    -fx-field-bg: #2D2D2D;
+    -fx-border: #333333;
+    
+    -fx-background-color: -fx-primary-bg;
     -fx-font-family: "Segoe UI Semibold", "Segoe UI", sans-serif;
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: -fx-text-main;
+}
+
+.center-bg {
+    -fx-background-color: -fx-primary-bg;
+}
+
+.light-theme {
+    -fx-primary-bg: #F0F2F5;
+    -fx-secondary-bg: #FFFFFF;
+    -fx-accent: #3498DB;
+    -fx-text-main: #2D3436;
+    -fx-text-muted: #636E72;
+    -fx-field-bg: #FFFFFF;
+    -fx-border: #DFE6E9;
 }
 
 /* Typography */
-.label {
-    -fx-text-fill: #FFFFFF;
-}
+.label { -fx-text-fill: -fx-text-main; }
 
 .title {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #C9A227;
+    -fx-text-fill: -fx-accent;
 }
 
 .header-text {
     -fx-font-size: 18px;
-    -fx-text-fill: #B0B0B0;
+    -fx-text-fill: -fx-text-muted;
 }
 
 /* Cards */
 .card {
-    -fx-background-color: #1E1E1E;
+    -fx-background-color: -fx-secondary-bg;
     -fx-background-radius: 16px;
     -fx-padding: 30px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 15, 0, 0, 8);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 8);
 }
 
 /* Form Fields */
 .text-field, .password-field, .text-area, .date-picker {
-    -fx-background-color: #2D2D2D;
-    -fx-text-fill: white;
-    -fx-border-color: transparent;
+    -fx-background-color: -fx-field-bg;
+    -fx-text-fill: -fx-text-main;
+    -fx-border-color: -fx-border;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-padding: 12px;
     -fx-prompt-text-fill: #666666;
-    -fx-font-size: 14px;
+}
+
+/* FIX: TextArea inner content styling */
+.text-area .content {
+    -fx-background-color: -fx-field-bg;
+    -fx-text-fill: -fx-text-main;
 }
 
 .text-field:focused, .password-field:focused, .text-area:focused, .date-picker:focused {
-    -fx-border-color: #C9A227;
+    -fx-border-color: -fx-accent;
     -fx-border-width: 1.5px;
-    -fx-background-color: #333333;
 }
 
 /* Buttons */
 .button {
-    -fx-background-color: #C9A227;
-    -fx-text-fill: #121212;
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 10px;
     -fx-padding: 12px 25px;
     -fx-cursor: hand;
-    -fx-font-size: 14px;
 }
 
 .button:hover {
-    -fx-background-color: #E0B52D;
     -fx-translate-y: -2px;
-    -fx-effect: dropshadow(three-pass-box, rgba(201, 162, 39, 0.3), 10, 0, 0, 4);
-}
-
-.button:pressed {
-    -fx-translate-y: 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);
 }
 
 .secondary-button {
     -fx-background-color: transparent;
-    -fx-border-color: #C9A227;
+    -fx-border-color: -fx-accent;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-text-fill: #C9A227;
+    -fx-text-fill: -fx-accent;
 }
 
-.secondary-button:hover {
-    -fx-background-color: rgba(201, 162, 39, 0.1);
-}
-
-.danger-button {
-    -fx-background-color: #CF6679;
-    -fx-text-fill: white;
-}
-
-.danger-button:hover {
-    -fx-background-color: #B00020;
-}
-
-/* Navigation Sidebar */
+/* Sidebar */
 .sidebar {
-    -fx-background-color: #1A1A1A;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 10, 0);
+    -fx-background-color: -fx-secondary-bg;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 20, 0, 10, 0);
 }
 
 .nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #B0B0B0;
+    -fx-text-fill: -fx-text-muted;
     -fx-alignment: BASELINE_LEFT;
     -fx-padding: 15px 30px;
     -fx-font-size: 16px;
-    -fx-background-radius: 0;
 }
 
-.nav-button:hover {
-    -fx-background-color: #2D2D2D;
-    -fx-text-fill: #C9A227;
-    -fx-translate-y: 0;
-    -fx-effect: none;
+.nav-button:hover, .nav-button-active {
+    -fx-background-color: -fx-field-bg;
+    -fx-text-fill: -fx-accent;
 }
 
-.nav-button-active {
-    -fx-background-color: #2D2D2D;
-    -fx-text-fill: #C9A227;
-    -fx-border-color: transparent transparent transparent #C9A227;
-    -fx-border-width: 0 0 0 4px;
+.sidebar-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-accent;
+    -fx-letter-spacing: 2px;
 }
 
-/* Gamification Progress Bar */
-.progress-bar {
-    -fx-pref-height: 12px;
+.sidebar-divider {
+    -fx-stroke: -fx-border;
 }
 
-.progress-bar > .track {
-    -fx-background-color: #2D2D2D;
-    -fx-background-radius: 6px;
-}
-
-.progress-bar > .bar {
-    -fx-background-color: linear-gradient(to right, #C9A227, #FFD700);
-    -fx-background-radius: 6px;
-}
-
-/* ScrollPane Styling */
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.scroll-pane .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical {
-    -fx-background-color: transparent;
-    -fx-pref-width: 8px;
-}
-
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #2D2D2D;
-    -fx-background-radius: 4px;
-}
+/* Progress Bar */
+.progress-bar > .track { -fx-background-color: -fx-field-bg; -fx-background-radius: 6px; }
+.progress-bar > .bar { -fx-background-color: -fx-accent; -fx-background-radius: 6px; }
 
 /* Level Indicator */
 .level-badge {
-    -fx-background-color: #C9A227;
+    -fx-background-color: -fx-accent;
     -fx-background-radius: 50%;
     -fx-min-width: 90px;
     -fx-min-height: 90px;
@@ -165,16 +140,21 @@
 .level-text {
     -fx-font-size: 42px;
     -fx-font-weight: bold;
-    -fx-text-fill: #121212;
+    -fx-text-fill: white;
 }
 
-.title-badge {
-    -fx-background-color: #2D2D2D;
-    -fx-text-fill: #C9A227;
-    -fx-padding: 8px 20px;
-    -fx-background-radius: 20px;
+.task-item {
+    -fx-background-color: -fx-field-bg;
+    -fx-padding: 20px;
+    -fx-background-radius: 12px;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 12px;
+}
+
+.xp-badge {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+    -fx-padding: 4 10;
+    -fx-background-radius: 15;
     -fx-font-weight: bold;
-    -fx-border-color: #C9A227;
-    -fx-border-width: 1px;
-    -fx-border-radius: 20px;
 }

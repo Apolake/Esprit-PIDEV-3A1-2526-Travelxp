@@ -99,6 +99,11 @@ public class DashboardController {
     }
 
     @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
     private void handleEditProfile(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/edit_profile.fxml");
     }
@@ -106,6 +111,12 @@ public class DashboardController {
     @FXML
     private void handleChangePassword(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/change_password.fxml");
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        com.travelxp.utils.ThemeManager.toggleTheme(stage.getScene());
     }
 
     @FXML
@@ -120,6 +131,7 @@ public class DashboardController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Scene Error", "Failed to load view: " + e.getMessage());

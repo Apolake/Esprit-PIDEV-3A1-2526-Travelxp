@@ -25,19 +25,19 @@
                <children>
                   <VBox spacing="8.0">
                      <children>
-                        <Label text="New Email Address" style="-fx-font-weight: bold; -fx-text-fill: #B0B0B0;" />
+                        <Label text="New Email Address" style="-fx-font-weight: bold; -fx-text-fill: -fx-text-muted;" />
                         <TextField fx:id="emailField" promptText="Enter new email" />
                      </children>
                   </VBox>
                   <VBox spacing="8.0">
                      <children>
-                        <Label text="Date of Birth" style="-fx-font-weight: bold; -fx-text-fill: #B0B0B0;" />
+                        <Label text="Date of Birth" style="-fx-font-weight: bold; -fx-text-fill: -fx-text-muted;" />
                         <DatePicker fx:id="birthdayPicker" maxWidth="Infinity" />
                      </children>
                   </VBox>
                   <VBox spacing="8.0">
                      <children>
-                        <Label text="Profile Bio" style="-fx-font-weight: bold; -fx-text-fill: #B0B0B0;" />
+                        <Label text="Profile Bio" style="-fx-font-weight: bold; -fx-text-fill: -fx-text-muted;" />
                         <TextArea fx:id="bioArea" prefHeight="120.0" promptText="Update your bio..." />
                      </children>
                   </VBox>
@@ -61,5 +61,10 @@
             <Insets bottom="60.0" left="60.0" right="60.0" top="60.0" />
          </padding>
       </VBox>
+      <Button onAction="#toggleTheme" text="🌙 / ☀️" styleClass="secondary-button" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets top="20" right="20" />
+         </StackPane.margin>
+      </Button>
    </children>
 </StackPane>

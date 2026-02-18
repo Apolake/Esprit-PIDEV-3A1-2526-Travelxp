@@ -25,6 +25,7 @@ public class Main extends Application {
         primaryStage.setTitle("TravelXP - Secure User Management");
         primaryStage.setResizable(true);
         primaryStage.setScene(scene);
+        com.travelxp.utils.ThemeManager.applyTheme(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
