@@ -1,0 +1,446 @@
+📄 PROJECT REQUIREMENTS DOCUMENT
+Project: Secure User Management Desktop Application
+
+1️⃣ SYSTEM OVERVIEW
+1.1 Purpose
+
+Develop a secure, full-screen JavaFX desktop application for managing user accounts with:
+
+User Registration
+
+User Login
+
+View Profile
+
+Modify Email
+
+Modify Password
+
+Modify Birthday
+
+Modify Bio
+
+Change Profile Image
+
+Delete Account
+
+Logout
+
+System must implement secure password hashing and proper JDBC usage.
+
+2️⃣ TECHNOLOGY STACK
+Component	Technology
+Language	Java (JDK 25)
+Build Tool	Maven
+UI	JavaFX
+Database	MySQL
+DB Access	JDBC
+Password Security	BCrypt
+Don't use DAO layer
+3️⃣ DATABASE DESIGN
+3.1 Database Name
+
+travelxp
+password: blank(nothing ,empty)
+
+3.2 Users Table
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    birthday DATE NOT NULL,
+    bio TEXT,
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+4️⃣ PROJECT STRUCTURE 
+com.travelxp
+│
+├── Main.java
+│
+├── utils
+│   ├── MyDB.java
+│   └── PasswordUtil.java
+│
+├── models
+│   └── User.java
+│
+├── services
+│   └── UserService.java
+│
+├── controllers
+│   ├── LoginController.java
+│   ├── RegisterController.java
+│   ├── ProfileController.java
+│   ├── EditProfileController.java
+│   └── ChangePasswordController.java
+│
+├── views
+│   ├── login.fxml
+│   ├── register.fxml
+│   ├── profile.fxml
+│   ├── edit_profile.fxml
+│   └── change_password.fxml
+│
+└── resources
+    └── style.css
+
+5️⃣ DATABASE CONNECTION REQUIREMENTS
+MyDB Class
+
+Singleton pattern
+
+Uses JDBC DriverManager
+
+Loads DB credentials from properties file
+
+Returns single Connection instance
+
+Responsibilities:
+
+Establish connection
+
+Provide getConnection()
+
+Handle driver loading
+
+6️⃣ SERVICE LAYER REQUIREMENTS (JDBC INSIDE SERVICE)
+UserService Responsibilities
+
+All SQL must be written inside this class using:
+
+PreparedStatement
+
+ResultSet
+
+Proper exception handling
+
+Transactions where necessary
+
+6.1 Methods Required in UserService
+registerUser(User user)
+
+Must:
+
+Validate uniqueness (email + username)
+
+Hash password
+
+Insert into database
+
+Return success/failure
+
+Uses:
+
+INSERT INTO users(username,email,password_hash,birthday,bio,profile_image)
+VALUES(?,?,?,?,?,?)
+
+login(String email, String password)
+
+Must:
+
+Fetch stored password_hash
+
+Compare using BCrypt
+
+Return User object if valid
+
+Return null if invalid
+
+Uses:
+
+SELECT * FROM users WHERE email = ?
+
+updateEmail(int userId, String newEmail)
+
+Must:
+
+Check uniqueness
+
+Validate format
+
+Update DB
+
+UPDATE users SET email = ? WHERE id = ?
+
+updatePassword(int userId, String currentPassword, String newPassword)
+
+Must:
+
+Fetch stored hash
+
+Verify current password
+
+Hash new password
+
+Update DB
+
+UPDATE users SET password_hash = ? WHERE id = ?
+
+updateBirthday(int userId, LocalDate birthday)
+
+Validation:
+
+Cannot be future date
+
+updateBio(int userId, String bio)
+
+Validation:
+
+Max 500 characters
+
+updateProfileImage(int userId, String imagePath)
+
+Store file path only.
+
+getUserById(int userId)
+
+Returns full User object.
+
+deleteUser(int userId, String password)
+
+Must:
+
+Verify password
+
+Delete record
+
+DELETE FROM users WHERE id = ?
+
+7️⃣ PASSWORD SECURITY REQUIREMENTS
+Mandatory BCrypt Usage
+
+Library: jbcrypt
+
+Cost factor: minimum 10
+
+Required methods:
+
+BCrypt.hashpw(password, BCrypt.gensalt(12))
+BCrypt.checkpw(rawPassword, storedHash)
+
+
+Rules:
+
+Never store plain password
+
+Never compare plain text
+
+Never log password
+
+8️⃣ UI REQUIREMENTS (JavaFX)
+8.1 Application Behavior
+
+Full-screen mode enabled on start
+
+Resizable disabled
+
+Dark theme
+
+Smooth transitions
+
+Professional layout
+
+8.2 UI Theme
+
+Background: #121212
+Cards: #1E1E1E
+Accent: Gold (#C9A227)
+Text: White
+Rounded corners: 12px
+Soft drop shadows
+
+8.3 SCREENS REQUIRED
+1️⃣ Login Screen
+
+Components:
+
+TextField (Email)
+
+PasswordField
+
+Login Button
+
+Register Button
+
+Behavior:
+
+Validate input
+
+Call UserService.login()
+
+2️⃣ Register Screen
+
+Components:
+
+Username
+
+Email
+
+Password
+
+Confirm Password
+
+DatePicker (Birthday)
+
+TextArea (Bio)
+
+Image Upload Button
+
+Register Button
+
+Back Button
+
+Validations performed before service call.
+
+3️⃣ Profile Screen
+
+Displays:
+
+Profile Image
+
+Username
+
+Email
+
+Birthday
+
+Bio
+
+Created Date
+
+Buttons:
+
+Edit Profile
+
+Change Password
+
+Delete Account
+
+Logout
+
+4️⃣ Edit Profile Screen
+
+Editable:
+
+Email
+
+Birthday
+
+Bio
+
+Profile Image
+
+5️⃣ Change Password Screen
+
+Fields:
+
+Current Password
+
+New Password
+
+Confirm Password
+
+9️⃣ VALIDATION RULES
+Field	Rule
+Username	3–50 chars
+Email	Valid format
+Password	8+ chars, 1 letter, 1 number
+Birthday	Not future
+Bio	Max 500 chars
+🔟 NON-FUNCTIONAL REQUIREMENTS
+
+Use PreparedStatement only
+
+No SQL injection
+
+No duplicated DB logic
+
+Handle SQLExceptions
+
+Clean service-based architecture
+
+MVC separation respected
+
+Proper alert dialogs for errors
+
+1️⃣1️⃣ MAVEN REQUIREMENTS
+
+Must include:
+
+JavaFX modules
+
+MySQL Connector/J
+
+jbcrypt
+
+JavaFX plugin configured for JDK 25.
+
+1️⃣2️⃣ ERROR HANDLING REQUIREMENTS
+
+System must handle:
+
+Duplicate email
+
+Duplicate username
+
+Wrong password
+
+DB connection failure
+
+Invalid inputs
+
+Empty fields
+
+Using JavaFX Alert dialogs.
+
+1️⃣3️⃣ DEVELOPMENT ORDER
+
+Setup MySQL
+
+Create schema
+
+Setup Maven
+
+Create MyDB
+
+Create User model
+
+Create PasswordUtil
+
+Implement UserService (JDBC inside)
+
+Build UI (FXML)
+
+Connect Controllers
+
+Add validation
+
+Test security
+
+FINAL ARCHITECTURE SUMMARY
+
+✔ Clean MVC
+✔ JDBC inside Service
+✔ No DAO layer
+✔ Secure password hashing
+✔ Full-screen modern UI
+✔ Professional structure
+✔ Production-ready foundation
+
+If you want next, Your Majesty, I can now provide:
+
+Full pom.xml
+
+Complete MyDB class
+
+Complete UserService with all JDBC code
+
+Complete BCrypt utility
+
+Full starter JavaFX layout
+
+Step-by-step implementation guide

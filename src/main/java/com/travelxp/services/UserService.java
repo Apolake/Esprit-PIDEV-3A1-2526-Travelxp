@@ -1,0 +1,173 @@
+package com.travelxp.services;
+
+import com.travelxp.models.User;
+import com.travelxp.utils.MyDB;
+import com.travelxp.utils.PasswordUtil;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+public class UserService {
+    private final Connection connection;
+
+    public UserService() {
+        this.connection = MyDB.getInstance().getConnection();
+    }
+
+    public boolean registerUser(User user) throws SQLException {
+        // Uniqueness check (email + username)
+        if (isEmailOrUsernameTaken(user.getEmail(), user.getUsername())) {
+            throw new SQLException("Username or Email already exists.");
+        }
+
+        String sql = "INSERT INTO users(username, email, password_hash, birthday, bio, profile_image) VALUES(?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, PasswordUtil.hashPassword(user.getPasswordHash())); // Using field as raw password during reg
+            pstmt.setDate(4, Date.valueOf(user.getBirthday()));
+            pstmt.setString(5, user.getBio());
+            pstmt.setString(6, user.getProfileImage());
+            
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+
+    private boolean isEmailOrUsernameTaken(String email, String username) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE email = ? OR username = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            pstmt.setString(2, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public User login(String email, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String storedHash = rs.getString("password_hash");
+                    if (PasswordUtil.checkPassword(password, storedHash)) {
+                        return mapResultSetToUser(rs);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean updateEmail(int userId, String newEmail) throws SQLException {
+        // Uniqueness check for new email
+        String checkSql = "SELECT COUNT(*) FROM users WHERE email = ? AND id != ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(checkSql)) {
+            pstmt.setString(1, newEmail);
+            pstmt.setInt(2, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    throw new SQLException("Email is already taken.");
+                }
+            }
+        }
+
+        String sql = "UPDATE users SET email = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, newEmail);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updatePassword(int userId, String currentPassword, String newPassword) throws SQLException {
+        User user = getUserById(userId);
+        if (user != null && PasswordUtil.checkPassword(currentPassword, user.getPasswordHash())) {
+            String sql = "UPDATE users SET password_hash = ? WHERE id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, PasswordUtil.hashPassword(newPassword));
+                pstmt.setInt(2, userId);
+                return pstmt.executeUpdate() > 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean updateBirthday(int userId, LocalDate birthday) throws SQLException {
+        if (birthday.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Birthday cannot be a future date.");
+        }
+        String sql = "UPDATE users SET birthday = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setDate(1, Date.valueOf(birthday));
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updateBio(int userId, String bio) throws SQLException {
+        if (bio != null && bio.length() > 500) {
+            throw new IllegalArgumentException("Bio cannot exceed 500 characters.");
+        }
+        String sql = "UPDATE users SET bio = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, bio);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updateProfileImage(int userId, String imagePath) throws SQLException {
+        String sql = "UPDATE users SET profile_image = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, imagePath);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public User getUserById(int userId) throws SQLException {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToUser(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteUser(int userId, String password) throws SQLException {
+        User user = getUserById(userId);
+        if (user != null && PasswordUtil.checkPassword(password, user.getPasswordHash())) {
+            String sql = "DELETE FROM users WHERE id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, userId);
+                return pstmt.executeUpdate() > 0;
+            }
+        }
+        return false;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setUsername(rs.getString("username"));
+        user.setEmail(rs.getString("email"));
+        user.setPasswordHash(rs.getString("password_hash"));
+        user.setBirthday(rs.getDate("birthday").toLocalDate());
+        user.setBio(rs.getString("bio"));
+        user.setProfileImage(rs.getString("profile_image"));
+        user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        return user;
+    }
+}
