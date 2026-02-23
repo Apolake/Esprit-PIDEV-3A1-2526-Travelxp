@@ -330,12 +330,20 @@ public class DashboardController {
 
     @FXML
     private void handleBrowseProperties(ActionEvent event) {
-        changeScene(event, "/com/travelxp/views/property-view.fxml");
+        String fxml = "/com/travelxp/views/property-view.fxml";
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            fxml = "/com/travelxp/views/admin-property-view.fxml";
+        }
+        changeScene(event, fxml);
     }
 
     @FXML
     private void handleMyBookings(ActionEvent event) {
-        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+        String fxml = "/com/travelxp/views/booking-view.fxml";
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            fxml = "/com/travelxp/views/admin-booking-view.fxml";
+        }
+        changeScene(event, fxml);
     }
 
     @FXML

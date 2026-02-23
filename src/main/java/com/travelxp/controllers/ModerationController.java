@@ -192,6 +192,50 @@ public class ModerationController {
         }
     }
 
+    @FXML
+    private void handleManageProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-property-view.fxml");
+    }
+
+    @FXML
+    private void handleManageOffers(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/offer-view.fxml");
+    }
+
+    @FXML
+    private void handleManageBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-booking-view.fxml");
+    }
+
+    @FXML
+    private void handleManageServices(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/service-view.fxml");
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
+    }
+
+    private void changeScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ThemeManager.toggleTheme(stage.getScene());
+    }
+
     private void showAlert(Alert.AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

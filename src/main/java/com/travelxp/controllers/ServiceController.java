@@ -162,7 +162,7 @@ public class ServiceController {
     @FXML
     private void handleBack(ActionEvent event) {
         try {
-            String fxml = "/com/travelxp/views/dashboard.fxml";
+            String fxml = "/com/travelxp/views/admin_dashboard.fxml";
             if (com.travelxp.Main.getSession().getUser().getRole().equals("ADMIN")) {
                 fxml = "/com/travelxp/views/admin_dashboard.fxml";
             }
@@ -175,6 +175,50 @@ public class ServiceController {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Navigation Failed", "Failed to load dashboard: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleManageProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-property-view.fxml");
+    }
+
+    @FXML
+    private void handleManageOffers(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/offer-view.fxml");
+    }
+
+    @FXML
+    private void handleManageBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-booking-view.fxml");
+    }
+
+    @FXML
+    private void handleManageComments(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/moderation-view.fxml");
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        com.travelxp.Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
+    }
+
+    private void changeScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ThemeManager.toggleTheme(stage.getScene());
     }
 
 	private void loadServices() {

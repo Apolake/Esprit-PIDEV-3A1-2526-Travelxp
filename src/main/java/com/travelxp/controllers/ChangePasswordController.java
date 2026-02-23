@@ -110,7 +110,50 @@ public class ChangePasswordController {
 
     @FXML
     private void handleCancel(ActionEvent event) {
-        changeScene(event, "/com/travelxp/views/dashboard.fxml");
+        String fxml = "/com/travelxp/views/dashboard.fxml";
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            fxml = "/com/travelxp/views/admin_dashboard.fxml";
+        }
+        changeScene(event, fxml);
+    }
+
+    @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
+    private void handleBrowseProperties(ActionEvent event) {
+        String fxml = "/com/travelxp/views/property-view.fxml";
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            fxml = "/com/travelxp/views/admin-property-view.fxml";
+        }
+        changeScene(event, fxml);
+    }
+
+    @FXML
+    private void handleMyBookings(ActionEvent event) {
+        String fxml = "/com/travelxp/views/booking-view.fxml";
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            fxml = "/com/travelxp/views/admin-booking-view.fxml";
+        }
+        changeScene(event, fxml);
+    }
+
+    @FXML
+    private void handleEditProfile(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/edit_profile.fxml");
+    }
+
+    @FXML
+    private void handleFeedback(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/feedback-view.fxml");
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
     }
 
     @FXML

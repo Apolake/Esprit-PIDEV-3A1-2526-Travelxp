@@ -79,16 +79,107 @@ public class BookingController {
 		});
 
 		boolean isAdmin = Main.getSession().getUser().getRole().equals("ADMIN");
-		adminForm.setVisible(isAdmin);
-		adminForm.setManaged(isAdmin);
-        bookingTable.setVisible(isAdmin);
-        bookingTable.setManaged(isAdmin);
-        userScrollPane.setVisible(!isAdmin);
-        userScrollPane.setManaged(!isAdmin);
+		if (adminForm != null) {
+            adminForm.setVisible(isAdmin);
+            adminForm.setManaged(isAdmin);
+        }
+        if (bookingTable != null) {
+            bookingTable.setVisible(isAdmin);
+            bookingTable.setManaged(isAdmin);
+        }
+        if (userScrollPane != null) {
+            userScrollPane.setVisible(!isAdmin);
+            userScrollPane.setManaged(!isAdmin);
+        }
 		
 		addActionsToTable();
 		loadBookings();
 	}
+
+    @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
+    private void handleBrowseProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/property-view.fxml");
+    }
+
+    @FXML
+    private void handleMyBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+    }
+
+    @FXML
+    private void handleEditProfile(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/edit_profile.fxml");
+    }
+
+    @FXML
+    private void handleChangePassword(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/change_password.fxml");
+    }
+
+    @FXML
+    private void handleFeedback(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/feedback-view.fxml");
+    }
+
+    @FXML
+    private void handleManageProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-property-view.fxml");
+    }
+
+    @FXML
+    private void handleManageOffers(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/offer-view.fxml");
+    }
+
+    @FXML
+    private void handleManageBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-booking-view.fxml");
+    }
+
+    @FXML
+    private void handleManageComments(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/moderation-view.fxml");
+    }
+
+    @FXML
+    private void handleManageServices(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/service-view.fxml");
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
+        try {
+            String fxml = "/com/travelxp/views/dashboard.fxml";
+            if (com.travelxp.Main.getSession().getUser().getRole().equals("ADMIN")) {
+                fxml = "/com/travelxp/views/admin_dashboard.fxml";
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Navigation Failed", "Failed to load dashboard: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ThemeManager.toggleTheme(stage.getScene());
+    }
 
 	private void addActionsToTable() {
 		Callback<TableColumn<Booking, Void>, TableCell<Booking, Void>> cellFactory = param -> new TableCell<>() {
@@ -131,7 +222,6 @@ public class BookingController {
 			if (btn == ButtonType.OK) {
 				try {
 					bookingService.updateBookingStatus(booking.getBookingId(), "CANCELLED");
-                    // Refund
                     userService.updateBalance(booking.getUserId(), booking.getTotalPrice());
                     Main.getSession().setUser(userService.getUserById(booking.getUserId()));
 					loadBookings();
@@ -164,8 +254,6 @@ public class BookingController {
 
 				bookingService.updateBookingDuration(booking.getBookingId(), newDuration);
                 bookingService.updateBookingPrice(booking.getBookingId(), newTotalPrice);
-                
-                // Adjust balance
                 userService.updateBalance(booking.getUserId(), -diff);
                 Main.getSession().setUser(userService.getUserById(booking.getUserId()));
                 
@@ -298,17 +386,11 @@ public class BookingController {
 			int userId = parseRequiredInt(userIdField.getText(), "User ID");
 			int tripId = tripIdField.getText().isEmpty() ? 0 : Integer.parseInt(tripIdField.getText());
 			int serviceId = serviceIdField.getText().isEmpty() ? 0 : Integer.parseInt(serviceIdField.getText());
-			
 			LocalDate selectedDate = bookingDatePicker.getValue();
-			if (selectedDate == null) {
-				throw new IllegalArgumentException("Booking date is required.");
-			}
-
+			if (selectedDate == null) throw new IllegalArgumentException("Booking date is required.");
 			String status = bookingStatusCombo.getValue();
-			
 			Booking booking = new Booking(userId, null, tripId, serviceId, Date.valueOf(selectedDate), status, 1, 0.0);
 			bookingService.addBooking(booking);
-
 			loadBookings();
 			clearForm();
 			showAlert(Alert.AlertType.INFORMATION, "Success", "Booking Created", "Booking added successfully.");
@@ -326,13 +408,11 @@ public class BookingController {
 			showAlert(Alert.AlertType.WARNING, "No Selection", "Update Failed", "Please select a booking first.");
 			return;
 		}
-
 		String newStatus = bookingStatusCombo.getValue();
 		if (newStatus == null || newStatus.isBlank()) {
 			showAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Status", "Please select a booking status.");
 			return;
 		}
-
 		try {
 			bookingService.updateBookingStatus(selected.getBookingId(), newStatus);
 			loadBookings();
@@ -349,12 +429,10 @@ public class BookingController {
 			showAlert(Alert.AlertType.WARNING, "No Selection", "Delete Failed", "Please select a booking first.");
 			return;
 		}
-
 		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
 		confirm.setTitle("Delete Booking");
 		confirm.setHeaderText("Delete booking #" + selected.getBookingId() + "?");
 		confirm.setContentText("This action cannot be undone.");
-
 		confirm.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				try {
@@ -379,21 +457,16 @@ public class BookingController {
 		loadBookings();
 	}
 
-    @FXML
-    private void handleBack(ActionEvent event) {
+    private void changeScene(ActionEvent event, String fxmlPath) {
         try {
-            String fxml = "/com/travelxp/views/dashboard.fxml";
-            if (com.travelxp.Main.getSession().getUser().getRole().equals("ADMIN")) {
-                fxml = "/com/travelxp/views/admin_dashboard.fxml";
-            }
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
             ThemeManager.applyTheme(stage.getScene());
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Navigation Failed", "Failed to load dashboard: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Scene Error", "Failed to load view: " + e.getMessage());
         }
     }
 

@@ -108,16 +108,107 @@ public class PropertyController {
 		});
 
 		boolean isAdmin = Main.getSession().getUser().getRole().equals("ADMIN");
-		adminForm.setVisible(isAdmin);
-		adminForm.setManaged(isAdmin);
-        propertyTable.setVisible(isAdmin);
-        propertyTable.setManaged(isAdmin);
-        userScrollPane.setVisible(!isAdmin);
-        userScrollPane.setManaged(!isAdmin);
+		if (adminForm != null) {
+            adminForm.setVisible(isAdmin);
+            adminForm.setManaged(isAdmin);
+        }
+        if (propertyTable != null) {
+            propertyTable.setVisible(isAdmin);
+            propertyTable.setManaged(isAdmin);
+        }
+        if (userScrollPane != null) {
+            userScrollPane.setVisible(!isAdmin);
+            userScrollPane.setManaged(!isAdmin);
+        }
 		
 		addActionsToTable();
 		loadProperties();
 	}
+
+    @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
+    private void handleBrowseProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/property-view.fxml");
+    }
+
+    @FXML
+    private void handleMyBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+    }
+
+    @FXML
+    private void handleEditProfile(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/edit_profile.fxml");
+    }
+
+    @FXML
+    private void handleChangePassword(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/change_password.fxml");
+    }
+
+    @FXML
+    private void handleFeedback(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/feedback-view.fxml");
+    }
+
+    @FXML
+    private void handleManageProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-property-view.fxml");
+    }
+
+    @FXML
+    private void handleManageOffers(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/offer-view.fxml");
+    }
+
+    @FXML
+    private void handleManageBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-booking-view.fxml");
+    }
+
+    @FXML
+    private void handleManageComments(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/moderation-view.fxml");
+    }
+
+    @FXML
+    private void handleManageServices(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/service-view.fxml");
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
+        try {
+            String fxml = "/com/travelxp/views/dashboard.fxml";
+            if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+                fxml = "/com/travelxp/views/admin_dashboard.fxml";
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Navigation Failed", "Failed to load dashboard: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ThemeManager.toggleTheme(stage.getScene());
+    }
 
     @FXML
     private void handleChooseImage() {
@@ -230,8 +321,7 @@ public class PropertyController {
 		dialog.setTitle("Book: " + property.getTitle());
 		
 		final double basePrice = property.getPricePerNight().doubleValue();
-		
-        final List<Offer> allOffers = new ArrayList<>();
+		final List<Offer> allOffers = new ArrayList<>();
         final List<Service> availableExtraServices = new ArrayList<>();
         try {
             allOffers.addAll(offerService.getAllActiveOffersForProperty(property.getId()));
@@ -385,11 +475,9 @@ public class PropertyController {
 	private void handleAddProperty() {
 		try {
 			int ownerId = parseRequiredInt(ownerIdField.getText(), "Owner ID");
-			// Validate owner exists
 			if (userService.getUserById(ownerId) == null) {
 				throw new IllegalArgumentException("Owner with ID " + ownerId + " does not exist.");
 			}
-
 			String title = parseRequiredString(titleField.getText(), "Title");
 			String description = descriptionField.getText();
 			String propertyType = parseRequiredString(propertyTypeField.getText(), "Property Type");
@@ -402,10 +490,8 @@ public class PropertyController {
 			BigDecimal price = parseRequiredBigDecimal(priceField.getText(), "Price Per Night");
 			String images = imagesField.getText();
 			Boolean isActive = isActiveCheck.isSelected();
-
 			Property property = new Property((long)ownerId, title, description, propertyType, address, city, country, bedrooms, bathrooms, maxGuests, price, images, isActive);
 			propertyService.addProperty(property);
-
 			loadProperties();
 			clearForm();
 			showAlert(Alert.AlertType.INFORMATION, "Success", "Property Created", "Property added successfully.");
@@ -425,11 +511,9 @@ public class PropertyController {
 		}
 		try {
 			int ownerId = parseRequiredInt(ownerIdField.getText(), "Owner ID");
-			// Validate owner exists
 			if (userService.getUserById(ownerId) == null) {
 				throw new IllegalArgumentException("Owner with ID " + ownerId + " does not exist.");
 			}
-
 			String title = parseRequiredString(titleField.getText(), "Title");
 			String description = descriptionField.getText();
 			String propertyType = parseRequiredString(propertyTypeField.getText(), "Property Type");
@@ -442,7 +526,6 @@ public class PropertyController {
 			BigDecimal price = parseRequiredBigDecimal(priceField.getText(), "Price Per Night");
 			String images = imagesField.getText();
 			Boolean isActive = isActiveCheck.isSelected();
-
 			Property updated = new Property(selected.getId(), (long)ownerId, title, description, propertyType, address, city, country, bedrooms, bathrooms, maxGuests, price, images, isActive);
 			propertyService.updateProperty(updated);
 			loadProperties();
@@ -461,12 +544,10 @@ public class PropertyController {
 			showAlert(Alert.AlertType.WARNING, "No Selection", "Delete Failed", "Please select a property first.");
 			return;
 		}
-
 		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
 		confirm.setTitle("Delete Property");
 		confirm.setHeaderText("Delete property #" + selected.getId() + "?");
 		confirm.setContentText("This action cannot be undone.");
-
 		confirm.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				try {
@@ -490,24 +571,6 @@ public class PropertyController {
 	private void handleRefreshProperties() {
 		loadProperties();
 	}
-
-    @FXML
-    private void handleBack(ActionEvent event) {
-        try {
-            String fxml = "/com/travelxp/views/dashboard.fxml";
-            if (Main.getSession().getUser().getRole().equals("ADMIN")) {
-                fxml = "/com/travelxp/views/admin_dashboard.fxml";
-            }
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.getScene().setRoot(root);
-            ThemeManager.applyTheme(stage.getScene());
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Navigation Failed", "Failed to load dashboard: " + e.getMessage());
-        }
-    }
 
 	private void populateForm(Property property) {
 		ownerIdField.setText(String.valueOf(property.getOwnerId()));
@@ -570,6 +633,19 @@ public class PropertyController {
 		}
 		return value.trim();
 	}
+
+	private void changeScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Scene Error", "Failed to load view: " + e.getMessage());
+        }
+    }
 
 	private void showAlert(Alert.AlertType type, String title, String header, String content) {
 		Alert alert = new Alert(type);

@@ -111,6 +111,7 @@
     -fx-border-radius: 0;
     -fx-border-width: 0 0 0 4; /* Left border indicator */
     -fx-border-color: transparent;
+    -fx-text-fill: -fx-text-base-color;
 }
 
 .nav-button:hover {
@@ -119,8 +120,24 @@
 
 .nav-button.accent {
     -fx-border-color: transparent transparent transparent -fx-accent-color;
-    -fx-background-color: rgba(212, 175, 55, 0.05);
+    -fx-background-color: rgba(212, 175, 55, 0.1);
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-weight: bold;
 }
+
+/* Ensure icons/emojis in sidebar are visible in dark mode */
+.dark-theme .nav-button .image-view {
+    -fx-effect: dropshadow(three-pass-box, white, 2, 0, 0, 0); /* Glow effect to make dark icons pop */
+}
+
+.dark-theme .nav-button.accent {
+    -fx-text-fill: -fx-accent-color; /* Gold text for selected button */
+}
+
+.dark-theme .nav-button {
+    -fx-text-fill: #e0e0e0;
+}
+
 
 /* Helper class for title */
 .title {

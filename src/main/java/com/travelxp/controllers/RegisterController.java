@@ -1,5 +1,6 @@
 package com.travelxp.controllers;
 
+import com.travelxp.Main;
 import com.travelxp.models.User;
 import com.travelxp.services.UserService;
 import javafx.animation.Animation;
@@ -138,9 +139,45 @@ public class RegisterController {
     }
 
     @FXML
+    private void handleBrowseProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/property-view.fxml");
+    }
+
+    @FXML
+    private void handleMyBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+    }
+
+    @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
+    private void handleEditProfile(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/edit_profile.fxml");
+    }
+
+    @FXML
+    private void handleFeedback(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/feedback-view.fxml");
+    }
+
+    @FXML
+    private void handleChangePassword(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/change_password.fxml");
+    }
+
+    @FXML
     private void toggleTheme(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         com.travelxp.utils.ThemeManager.toggleTheme(stage.getScene());
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Main.setSession(null);
+        changeScene(event, "/com/travelxp/views/login.fxml");
     }
 
     private boolean validateInput(String username, String email, String password, String confirmPassword, LocalDate birthday, String bio) {

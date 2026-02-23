@@ -15,14 +15,23 @@
                   <Insets top="40" bottom="40"/>
                </padding>
                <children>
-                  <Label text="TRAVELXP" styleClass="title-1" />
+                  <Label text="ADMIN PANEL" styleClass="title-2" />
                   <Separator />
                </children>
             </VBox>
             
             <VBox spacing="5" VBox.vgrow="ALWAYS">
                <children>
-                  <Button onAction="#handleBack" maxWidth="Infinity" styleClass="nav-button, flat" text="Dashboard">
+                  <Button onAction="#handleBack" maxWidth="Infinity" styleClass="nav-button, flat" text="Users">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-menu-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button maxWidth="Infinity" styleClass="nav-button, accent" text="Properties">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
@@ -31,25 +40,16 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button onAction="#handleTasks" maxWidth="Infinity" styleClass="nav-button, flat" text="Tasks">
+                  <Button onAction="#handleManageOffers" maxWidth="Infinity" styleClass="nav-button, flat" text="Offers">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
-                              <Image url="@../../../icons/icons8-to-do-list-50.png" />
+                              <Image url="@../../../icons/icons8-favorite-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button maxWidth="Infinity" styleClass="nav-button, accent" text="Browse Properties">
-                     <graphic>
-                        <ImageView fitHeight="20" fitWidth="20">
-                           <image>
-                              <Image url="@../../../icons/icons8-home-page-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button onAction="#handleMyBookings" maxWidth="Infinity" styleClass="nav-button, flat" text="My Bookings">
+                  <Button onAction="#handleManageBookings" maxWidth="Infinity" styleClass="nav-button, flat" text="Bookings">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
@@ -58,7 +58,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button onAction="#handleEditProfile" maxWidth="Infinity" styleClass="nav-button, flat" text="Edit Profile">
+                  <Button onAction="#handleManageComments" maxWidth="Infinity" styleClass="nav-button, flat" text="Comments">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
@@ -67,20 +67,11 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button onAction="#handleChangePassword" maxWidth="Infinity" styleClass="nav-button, flat" text="Security">
+                  <Button onAction="#handleManageServices" maxWidth="Infinity" styleClass="nav-button, flat" text="Services">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
                               <Image url="@../../../icons/icons8-services-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button onAction="#handleFeedback" maxWidth="Infinity" styleClass="nav-button, flat" text="Feedback">
-                     <graphic>
-                        <ImageView fitHeight="20" fitWidth="20">
-                           <image>
-                              <Image url="@../../../icons/icons8-to-do-list-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -111,7 +102,6 @@
    <center>
       <StackPane styleClass="center-bg">
          <children>
-            <Pane fx:id="animatedBg" styleClass="animated-bg" visible="false"/> <!-- Placeholder for animation if needed -->
             <VBox spacing="20">
                <padding>
                   <Insets top="20" right="20" bottom="20" left="20"/>
@@ -195,16 +185,6 @@
                         <TableColumn fx:id="actionsCol" text="Actions" prefWidth="100"/>
                      </columns>
                   </TableView>
-
-                  <ScrollPane fx:id="userScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-to-edge">
-                     <content>
-                        <FlowPane fx:id="userCardsContainer" hgap="25" vgap="25" prefWrapLength="1200">
-                           <padding>
-                              <Insets top="10" right="10" bottom="10" left="10"/>
-                           </padding>
-                        </FlowPane>
-                     </content>
-                  </ScrollPane>
                </children>
             </VBox>
             <Button onAction="#toggleTheme" styleClass="theme-toggle-button" StackPane.alignment="TOP_RIGHT">

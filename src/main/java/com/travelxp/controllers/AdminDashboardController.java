@@ -98,7 +98,7 @@ public class AdminDashboardController {
         double opacity = 0.03 + random.nextDouble() * 0.05;
         
         // Check current theme state at creation time
-        boolean isDark = com.travelxp.utils.ThemeManager.isDark();
+        boolean isDark = ThemeManager.isDark();
         String color = isDark ? "#D4AF37" : "#002b5c";
         
         circle.setFill(Color.web(color, opacity));
@@ -206,8 +206,8 @@ public class AdminDashboardController {
         Button uploadBtn = new Button("Choose Image");
         uploadBtn.getStyleClass().add("secondary-button");
         uploadBtn.setOnAction(e -> {
-            javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
-            java.io.File file = fc.showOpenDialog(null);
+            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+            java.io.File file = fileChooser.showOpenDialog(null);
             if (file != null) {
                 String relativePath = com.travelxp.utils.ImageUtil.saveImage(file);
                 if (relativePath != null) {
@@ -239,9 +239,6 @@ public class AdminDashboardController {
                 user.setBio(bioArea.getText());
                 user.setRole(roleCombo.getValue());
                 user.setProfileImage(selectedImagePath);
-                
-                // Store XP/Level in properties if needed, but we'll use local variables for now
-                // Actually, let's just use them in the next step.
                 return user;
             }
             return null;
@@ -251,11 +248,9 @@ public class AdminDashboardController {
         result.ifPresent(user -> {
             try {
                 if (userService.updateUserAsAdmin(user)) {
-                    // Update gamification stats
                     int newXp = Integer.parseInt(xpField.getText());
                     int newLevel = Integer.parseInt(levelField.getText());
                     gamificationService.updateGamification(user.getId(), newXp, newLevel);
-                    
                     loadUsers();
                 }
             } catch (SQLException | NumberFormatException e) {
@@ -271,7 +266,7 @@ public class AdminDashboardController {
 
     @FXML
     private void handleManageProperties(ActionEvent event) {
-        changeScene(event, "/com/travelxp/views/property-view.fxml");
+        changeScene(event, "/com/travelxp/views/admin-property-view.fxml");
     }
 
     @FXML
@@ -281,7 +276,7 @@ public class AdminDashboardController {
 
     @FXML
     private void handleManageBookings(ActionEvent event) {
-        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+        changeScene(event, "/com/travelxp/views/admin-booking-view.fxml");
     }
 
     @FXML
@@ -292,6 +287,41 @@ public class AdminDashboardController {
     @FXML
     private void handleManageServices(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/service-view.fxml");
+    }
+
+    @FXML
+    private void handleBrowseProperties(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/property-view.fxml");
+    }
+
+    @FXML
+    private void handleMyBookings(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/booking-view.fxml");
+    }
+
+    @FXML
+    private void handleTasks(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/tasks.fxml");
+    }
+
+    @FXML
+    private void handleEditProfile(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/edit_profile.fxml");
+    }
+
+    @FXML
+    private void handleChangePassword(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/change_password.fxml");
+    }
+
+    @FXML
+    private void handleFeedback(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/feedback-view.fxml");
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin_dashboard.fxml");
     }
 
     @FXML
@@ -330,8 +360,8 @@ public class AdminDashboardController {
         Button uploadBtn = new Button("Choose Image");
         uploadBtn.getStyleClass().add("secondary-button");
         uploadBtn.setOnAction(e -> {
-            javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
-            java.io.File file = fc.showOpenDialog(null);
+            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+            java.io.File file = fileChooser.showOpenDialog(null);
             if (file != null) {
                 String relativePath = com.travelxp.utils.ImageUtil.saveImage(file);
                 if (relativePath != null) {
@@ -399,7 +429,6 @@ public class AdminDashboardController {
                             .findFirst().orElse(null);
                     
                     if (registered != null) {
-                        // Set specific initial XP/Level if they are not default
                         int initialXp = Integer.parseInt(xpField.getText());
                         int initialLevel = Integer.parseInt(levelField.getText());
                         if (initialXp != 0 || initialLevel != 1) {
@@ -418,6 +447,12 @@ public class AdminDashboardController {
                 showAlert(Alert.AlertType.ERROR, "Error", "Creation Failed", e.getMessage());
             }
         });
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ThemeManager.toggleTheme(stage.getScene());
     }
 
     private void handleDeleteUser(UserViewModel model) {
@@ -491,12 +526,6 @@ public class AdminDashboardController {
             return false;
         }
         return true;
-    }
-
-    @FXML
-    private void toggleTheme(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        ThemeManager.toggleTheme(stage.getScene());
     }
 
     @FXML
