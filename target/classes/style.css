@@ -180,9 +180,38 @@
     -fx-font-size: 14px;
 }
 
-.dark-theme .xp-badge {
+/* Recharge button specific fix */
+.recharge-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: derive(-fx-accent-color, -20%);
+}
+
+.dark-theme .recharge-button {
+    -fx-text-fill: black;
+}
+
+/* Property showcase image styling */
+.showcase-image-container {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-overflow-hidden: true;
+    -fx-border-color: derive(-fx-base, 10%);
+    -fx-border-width: 1px;
+}
+
+.showcase-image {
+    -fx-background-radius: 15px;
+}
+
+.title-2 {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
     -fx-text-fill: -fx-accent-color;
 }
+
 
 /* Level Badge */
 .level-badge {

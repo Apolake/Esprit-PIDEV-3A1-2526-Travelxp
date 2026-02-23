@@ -21,9 +21,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,8 @@ public class PropertyController {
 	@FXML private CheckBox isActiveCheck;
 	
 	@FXML private GridPane adminForm;
+    @FXML private ScrollPane userScrollPane;
+    @FXML private FlowPane userCardsContainer;
 
 	private final PropertyService propertyService = new PropertyService();
 	private final BookingService bookingService = new BookingService();
@@ -104,6 +107,10 @@ public class PropertyController {
 		boolean isAdmin = Main.getSession().getUser().getRole().equals("ADMIN");
 		adminForm.setVisible(isAdmin);
 		adminForm.setManaged(isAdmin);
+        propertyTable.setVisible(isAdmin);
+        propertyTable.setManaged(isAdmin);
+        userScrollPane.setVisible(!isAdmin);
+        userScrollPane.setManaged(!isAdmin);
 		
 		addActionsToTable();
 		loadProperties();
@@ -147,30 +154,86 @@ public class PropertyController {
 		actionsCol.setCellFactory(cellFactory);
 	}
 
+    private void loadProperties() {
+        try {
+            List<Property> properties = propertyService.getAllProperties();
+            propertyData.setAll(properties);
+            propertyTable.setItems(propertyData);
+            
+            if (userCardsContainer != null) {
+                userCardsContainer.getChildren().clear();
+                for (Property p : properties) {
+                    userCardsContainer.getChildren().add(createUserPropertyCard(p));
+                }
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Load Failed", e.getMessage());
+        }
+    }
+
+    private VBox createUserPropertyCard(Property p) {
+        VBox card = new VBox(15);
+        card.getStyleClass().add("card");
+        card.setPrefWidth(350);
+        card.setPadding(new Insets(15));
+        card.setAlignment(javafx.geometry.Pos.TOP_CENTER);
+
+        StackPane imageContainer = new StackPane();
+        imageContainer.setPrefHeight(200);
+        imageContainer.getStyleClass().add("showcase-image-container");
+        
+        ImageView iv = new ImageView();
+        iv.setFitHeight(200);
+        iv.setFitWidth(320);
+        iv.setPreserveRatio(true);
+        
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(320, 200);
+        clip.setArcWidth(30);
+        clip.setArcHeight(30);
+        imageContainer.setClip(clip);
+
+        if (p.getImages() != null && !p.getImages().isEmpty()) {
+            File imgFile = new File(p.getImages());
+            if (imgFile.exists()) {
+                iv.setImage(new Image(imgFile.toURI().toString(), true));
+            }
+        }
+        imageContainer.getChildren().add(iv);
+
+        VBox info = new VBox(5);
+        Label title = new Label(p.getTitle());
+        title.getStyleClass().add("title-4");
+        title.setStyle("-fx-font-size: 18px;");
+        
+        Label loc = new Label(p.getCity() + ", " + p.getCountry());
+        loc.getStyleClass().add("text-muted");
+        
+        Label price = new Label("$" + p.getPricePerNight() + " / night");
+        price.getStyleClass().add("accent");
+        price.setStyle("-fx-font-weight: bold;");
+
+        Button bookBtn = new Button("Book Now");
+        bookBtn.getStyleClass().add("accent");
+        bookBtn.setMaxWidth(Double.MAX_VALUE);
+        bookBtn.setOnAction(e -> handleBook(p));
+
+        info.getChildren().addAll(title, loc, price, bookBtn);
+        card.getChildren().addAll(imageContainer, info);
+        return card;
+    }
+
 	private void handleBook(Property property) {
 		Dialog<Booking> dialog = new Dialog<>();
 		dialog.setTitle("Book: " + property.getTitle());
 		
-		double basePrice = property.getPricePerNight().doubleValue();
-		double discount = 0;
-		String offerTitle = "";
+		final double basePrice = property.getPricePerNight().doubleValue();
 		
-		try {
-			List<Offer> activeOffers = offerService.getActiveOffersByPropertyId(property.getId());
-			if (!activeOffers.isEmpty()) {
-				Offer bestOffer = activeOffers.get(0);
-				discount = bestOffer.getDiscountPercentage().doubleValue();
-				offerTitle = bestOffer.getTitle();
-			}
-		} catch (SQLException e) {
-			// Ignore
-		}
-
-		String headerText = "Base Price: $" + basePrice + " / night";
-		if (discount > 0) {
-			headerText += "\nSpecial Offer! " + offerTitle + ": " + discount + "% OFF!";
-		}
-		dialog.setHeaderText(headerText);
+        final List<Offer> allOffers = new ArrayList<>();
+        try {
+            allOffers.addAll(offerService.getAllActiveOffersForProperty(property.getId()));
+        } catch (SQLException e) {
+            // ignore
+        }
 
 		ButtonType bookButtonType = new ButtonType("Confirm & Pay", ButtonBar.ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(bookButtonType, ButtonType.CANCEL);
@@ -180,21 +243,49 @@ public class PropertyController {
 		
 		DatePicker datePicker = new DatePicker(LocalDate.now());
 		TextField durationField = new TextField("1");
-		Label totalLabel = new Label("Total Price: $" + (basePrice * (1 - discount/100.0)));
+		Label offerLabel = new Label("No active offers for selected date.");
+        offerLabel.setStyle("-fx-text-fill: #999;");
+		Label totalLabel = new Label("Total Price: $" + String.format("%.2f", basePrice));
 		
-		durationField.textProperty().addListener((obs, oldV, newV) -> {
-			try {
-				int days = Integer.parseInt(newV);
-				double total = basePrice * days * (1 - discount/100.0);
-				totalLabel.setText("Total Price: $" + String.format("%.2f", total));
-			} catch (NumberFormatException e) {
-				totalLabel.setText("Invalid duration");
-			}
-		});
+        java.lang.Runnable updatePrices = () -> {
+            try {
+                LocalDate selectedDate = datePicker.getValue();
+                int days = Integer.parseInt(durationField.getText());
+                if (selectedDate == null) return;
+
+                double currentDiscount = 0;
+                String currentOfferTitle = "";
+                
+                for (Offer o : allOffers) {
+                    if (!selectedDate.isBefore(o.getStartDate()) && !selectedDate.isAfter(o.getEndDate())) {
+                        currentDiscount = o.getDiscountPercentage().doubleValue();
+                        currentOfferTitle = o.getTitle();
+                        break;
+                    }
+                }
+
+                if (currentDiscount > 0) {
+                    offerLabel.setText("Applied Offer: " + currentOfferTitle + " (" + currentDiscount + "% OFF)");
+                    offerLabel.setStyle("-fx-text-fill: #D4AF37; -fx-font-weight: bold;");
+                } else {
+                    offerLabel.setText("No active offers for selected date.");
+                    offerLabel.setStyle("-fx-text-fill: #999;");
+                }
+
+                double total = basePrice * days * (1 - currentDiscount/100.0);
+                totalLabel.setText("Total Price: $" + String.format("%.2f", total));
+            } catch (NumberFormatException e) {
+                totalLabel.setText("Invalid duration");
+            }
+        };
+
+		durationField.textProperty().addListener((obs, oldV, newV) -> updatePrices.run());
+        datePicker.valueProperty().addListener((obs, oldV, newV) -> updatePrices.run());
 
 		content.getChildren().addAll(
 			new Label("Booking Date:"), datePicker,
 			new Label("Duration (Days):"), durationField,
+            offerLabel,
 			totalLabel
 		);
 
@@ -203,19 +294,25 @@ public class PropertyController {
 			if (btn == bookButtonType) {
 				try {
 					int duration = Integer.parseInt(durationField.getText());
-					double finalPrice = basePrice * duration * (1 - discount/100.0);
-					
-					if (Main.getSession().getUser().getBalance() < finalPrice) {
-						showAlert(Alert.AlertType.ERROR, "Insufficient Funds", "Low Balance", "Your balance is too low for this booking.");
-						return null;
-					}
+                    LocalDate selectedDate = datePicker.getValue();
+                    
+                    double currentDiscount = 0;
+                    for (Offer o : allOffers) {
+                        if (!selectedDate.isBefore(o.getStartDate()) && !selectedDate.isAfter(o.getEndDate())) {
+                            currentDiscount = o.getDiscountPercentage().doubleValue();
+                            break;
+                        }
+                    }
 
+					double finalPrice = basePrice * duration * (1 - currentDiscount/100.0);
+					
 					return new Booking(
 						Main.getSession().getUser().getId(),
+						property.getId(), 
 						0, 
 						0, 
-						Date.valueOf(datePicker.getValue()),
-						"CONFIRMED", // Auto confirm if paid
+						Date.valueOf(selectedDate),
+						"CONFIRMED",
 						duration,
 						finalPrice
 					);
@@ -226,19 +323,23 @@ public class PropertyController {
 			return null;
 		});
 
-		dialog.showAndWait().ifPresent(booking -> {
+		Optional<Booking> result = dialog.showAndWait();
+		if (result.isPresent()) {
+            Booking booking = result.get();
 			try {
+                if (Main.getSession().getUser().getBalance() < booking.getTotalPrice()) {
+                    showAlert(Alert.AlertType.ERROR, "Insufficient Funds", "Low Balance", "Your balance is too low for this booking.");
+                    return;
+                }
 				bookingService.addBooking(booking);
-				// Deduct balance
 				userService.updateBalance(booking.getUserId(), -booking.getTotalPrice());
-				// Update session
 				Main.getSession().setUser(userService.getUserById(booking.getUserId()));
 				
 				showAlert(Alert.AlertType.INFORMATION, "Success", "Booked & Paid", "Your booking has been confirmed and paid.");
 			} catch (SQLException e) {
 				showAlert(Alert.AlertType.ERROR, "Error", "Booking Failed", e.getMessage());
 			}
-		});
+		}
 	}
 
 	@FXML
@@ -369,15 +470,6 @@ public class PropertyController {
         }
     }
 
-	private void loadProperties() {
-		try {
-			propertyData.setAll(propertyService.getAllProperties());
-			propertyTable.setItems(propertyData);
-		} catch (SQLException e) {
-			showAlert(Alert.AlertType.ERROR, "Database Error", "Load Failed", e.getMessage());
-		}
-	}
-
 	private void populateForm(Property property) {
 		ownerIdField.setText(String.valueOf(property.getOwnerId()));
 		titleField.setText(property.getTitle());
@@ -411,18 +503,7 @@ public class PropertyController {
 		propertyTable.getSelectionModel().clearSelection();
 	}
 
-	private Long parseRequiredLong(String value, String fieldName) {
-		if (value == null || value.isBlank()) {
-			throw new IllegalArgumentException(fieldName + " is required.");
-		}
-		try {
-			return Long.parseLong(value.trim());
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(fieldName + " must be a valid number.");
-		}
-	}
-
-	private Integer parseRequiredInt(String value, String fieldName) {
+	private int parseRequiredInt(String value, String fieldName) {
 		if (value == null || value.isBlank()) {
 			throw new IllegalArgumentException(fieldName + " is required.");
 		}

@@ -100,6 +100,16 @@
                   <TableColumn fx:id="actionsCol" text="Actions" prefWidth="100"/>
                </columns>
             </TableView>
+
+            <ScrollPane fx:id="userScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-to-edge">
+               <content>
+                  <FlowPane fx:id="userCardsContainer" hgap="25" vgap="25" prefWrapLength="1200">
+                     <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>

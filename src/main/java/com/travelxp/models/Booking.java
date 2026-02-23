@@ -6,6 +6,7 @@ public class Booking {
 
     private int bookingId;
     private int userId;
+    private Long propertyId;
     private int tripId;
     private int serviceId;
     private Date bookingDate;
@@ -15,8 +16,9 @@ public class Booking {
 
     public Booking() {}
 
-   public Booking(int userId, int tripId, int serviceId, Date bookingDate, String bookingStatus, int duration, double totalPrice) {
+   public Booking(int userId, Long propertyId, int tripId, int serviceId, Date bookingDate, String bookingStatus, int duration, double totalPrice) {
     this.userId = userId;
+    this.propertyId = propertyId;
     this.tripId = tripId;
     this.serviceId = serviceId;
     this.bookingDate = bookingDate;
@@ -31,6 +33,9 @@ public class Booking {
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
     
+    public Long getPropertyId() { return propertyId; }
+    public void setPropertyId(Long propertyId) { this.propertyId = propertyId; }
+
     public int getTripId() { return tripId; }
     public void setTripId(int tripId) { this.tripId = tripId; }
     

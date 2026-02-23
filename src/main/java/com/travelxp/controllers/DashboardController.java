@@ -6,6 +6,7 @@ import com.travelxp.models.Property;
 import com.travelxp.models.User;
 import com.travelxp.services.GamificationService;
 import com.travelxp.services.PropertyService;
+import com.travelxp.services.UserService;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -42,6 +43,7 @@ public class DashboardController {
     @FXML private Label emailLabel;
     @FXML private Label birthdayLabel;
     @FXML private Label bioLabel;
+    @FXML private Label balanceLabel;
     @FXML private Label titleLabel;
     @FXML private Label levelLabel;
     @FXML private Label xpLabel;
@@ -51,6 +53,7 @@ public class DashboardController {
     @FXML private VBox propertyShowcase;
     @FXML private ScrollPane propertyScrollPane;
 
+    private final UserService userService = new UserService();
     private final GamificationService gamificationService = new GamificationService();
     private final PropertyService propertyService = new PropertyService();
     private final Random random = new Random();
@@ -88,55 +91,76 @@ public class DashboardController {
         VBox card = new VBox(15);
         card.getStyleClass().add("card");
         card.setMaxWidth(Double.MAX_VALUE);
-        card.setPadding(new Insets(20));
+        card.setPadding(new Insets(15));
+        card.setAlignment(javafx.geometry.Pos.TOP_CENTER);
 
-        HBox mainContent = new HBox(20);
-        mainContent.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-
-        // Image Preview
+        // Image Preview - Main Focus
         StackPane imageContainer = new StackPane();
-        imageContainer.setPrefSize(120, 120);
-        imageContainer.getStyleClass().add("profile-image-container");
+        imageContainer.setPrefHeight(200);
+        imageContainer.setMaxHeight(200);
+        imageContainer.getStyleClass().add("showcase-image-container");
+        
         ImageView iv = new ImageView();
-        iv.setFitHeight(110);
-        iv.setFitWidth(110);
+        iv.setFitHeight(200);
         iv.setPreserveRatio(true);
+        
+        // Clip for rounded corners
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
+        clip.widthProperty().bind(imageContainer.widthProperty());
+        clip.heightProperty().bind(imageContainer.heightProperty());
+        clip.setArcWidth(30);
+        clip.setArcHeight(30);
+        imageContainer.setClip(clip);
+
         if (p.getImages() != null && !p.getImages().isEmpty()) {
             File imgFile = new File(p.getImages());
             if (imgFile.exists()) {
-                iv.setImage(new Image(imgFile.toURI().toString()));
+                iv.setImage(new Image(imgFile.toURI().toString(), true));
             }
         }
+        
+        // Ensure image fits width
+        iv.fitWidthProperty().bind(imageContainer.widthProperty());
+        
         imageContainer.getChildren().add(iv);
 
-        VBox textInfo = new VBox(5);
+        VBox infoBox = new VBox(10);
+        infoBox.setPadding(new Insets(10, 0, 0, 0));
+
+        HBox topInfo = new HBox(10);
+        topInfo.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        VBox textInfo = new VBox(2);
         Label title = new Label(p.getTitle());
         title.getStyleClass().add("title-4");
+        title.setStyle("-fx-font-size: 18px;");
         title.setWrapText(true);
 
         Label location = new Label(p.getCity() + ", " + p.getCountry());
         location.getStyleClass().add("text-muted");
-        
         textInfo.getChildren().addAll(title, location);
         HBox.setHgrow(textInfo, Priority.ALWAYS);
 
-        VBox priceInfo = new VBox(5);
+        VBox priceInfo = new VBox(0);
         priceInfo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         Label price = new Label("$" + p.getPricePerNight());
         price.getStyleClass().add("accent");
-        price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+        price.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
         Label night = new Label("/ night");
         night.getStyleClass().add("text-muted");
         priceInfo.getChildren().addAll(price, night);
 
-        mainContent.getChildren().addAll(imageContainer, textInfo, priceInfo);
+        topInfo.getChildren().addAll(textInfo, priceInfo);
 
         Button viewBtn = new Button("Book This Property");
         viewBtn.getStyleClass().add("accent");
         viewBtn.setMaxWidth(Double.MAX_VALUE);
+        viewBtn.setPrefHeight(40);
         viewBtn.setOnAction(e -> handleBrowseProperties(e));
 
-        card.getChildren().addAll(mainContent, viewBtn);
+        infoBox.getChildren().addAll(topInfo, viewBtn);
+        
+        card.getChildren().addAll(imageContainer, infoBox);
         return card;
     }
 
@@ -200,11 +224,42 @@ public class DashboardController {
         tt.play();
     }
 
+    @FXML
+    private void handleRecharge(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("50.00");
+        dialog.setTitle("Recharge Balance");
+        dialog.setHeaderText("Add funds to your account.");
+        dialog.setContentText("Amount ($):");
+
+        dialog.showAndWait().ifPresent(amountStr -> {
+            try {
+                double amount = Double.parseDouble(amountStr);
+                if (amount <= 0) throw new NumberFormatException();
+                
+                int userId = Main.getSession().getUser().getId();
+                if (userService.updateBalance(userId, amount)) {
+                    // Update session and UI
+                    Main.getSession().setUser(userService.getUserById(userId));
+                    updateProfileUI(Main.getSession().getUser());
+                    
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Success! Your balance has been updated.");
+                    alert.show();
+                }
+            } catch (NumberFormatException | SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid amount or system error.");
+                alert.show();
+            }
+        });
+    }
+
     private void updateProfileUI(User user) {
         welcomeLabel.setText("Welcome back, " + user.getUsername() + "!");
         emailLabel.setText(user.getEmail());
         birthdayLabel.setText(user.getBirthday().format(DateTimeFormatter.ofPattern("MMM d, yyyy")));
         bioLabel.setText(user.getBio() != null ? user.getBio() : "No bio yet.");
+        if (balanceLabel != null) {
+            balanceLabel.setText(String.format("$%.2f", user.getBalance()));
+        }
         
         if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
             try {

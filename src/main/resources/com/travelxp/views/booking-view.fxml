@@ -61,10 +61,21 @@
                   <TableColumn fx:id="serviceIdCol" text="Service" prefWidth="60"/>
                   <TableColumn fx:id="bookingDateCol" text="Date" prefWidth="120"/>
                   <TableColumn fx:id="durationCol" text="Duration (Days)" prefWidth="100"/>
+                  <TableColumn fx:id="totalPriceCol" text="Total Price" prefWidth="100"/>
                   <TableColumn fx:id="bookingStatusCol" text="Status" prefWidth="100"/>
                   <TableColumn fx:id="actionsCol" text="Actions" prefWidth="180"/>
                </columns>
             </TableView>
+
+            <ScrollPane fx:id="userScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-to-edge">
+               <content>
+                  <VBox fx:id="userBookingsContainer" spacing="20">
+                     <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>

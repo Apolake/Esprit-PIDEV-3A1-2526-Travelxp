@@ -154,6 +154,17 @@
                                                 </HBox>
                                                 <VBox spacing="5">
                                                    <children>
+                                                      <Label text="Account Balance" styleClass="text-muted" />
+                                                      <HBox spacing="10" alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label fx:id="balanceLabel" text="\$0.00" styleClass="title-4, accent" />
+                                                            <Button text="Recharge" onAction="#handleRecharge" styleClass="recharge-button" style="-fx-font-size: 10px; -fx-padding: 3 8;"/>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox spacing="5">
+                                                   <children>
                                                       <Label text="Bio" styleClass="text-muted" />
                                                       <Label fx:id="bioLabel" text="No bio provided yet." wrapText="true" maxWidth="350" style="-fx-line-spacing: 5;" />
                                                    </children>

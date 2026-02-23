@@ -78,6 +78,18 @@ public class OfferService {
 		return offers;
 	}
 
+	public List<Offer> getAllActiveOffersForProperty(Long propertyId) throws SQLException {
+		List<Offer> offers = new ArrayList<>();
+		String sql = "SELECT * FROM offer WHERE property_id=? AND is_active=true";
+		PreparedStatement ps = cnx.prepareStatement(sql);
+		ps.setLong(1, propertyId);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			offers.add(mapResultSetToOffer(rs));
+		}
+		return offers;
+	}
+
 	// UPDATE
 	public void updateOffer(Offer offer) throws SQLException {
 		String sql = "UPDATE offer SET property_id=?, title=?, description=?, discount_percentage=?, start_date=?, end_date=?, is_active=?, created_at=? WHERE id=?";

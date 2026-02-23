@@ -21,15 +21,16 @@ public class BookingService {
 
     // CREATE
     public void addBooking(Booking booking) throws SQLException {
-        String sql = "INSERT INTO booking (user_id, trip_id, service_id, booking_date, booking_status, duration, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO booking (user_id, property_id, trip_id, service_id, booking_date, booking_status, duration, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setInt(1, booking.getUserId());
-        ps.setInt(2, booking.getTripId());
-        ps.setInt(3, booking.getServiceId());
-        ps.setDate(4, booking.getBookingDate());
-        ps.setString(5, booking.getBookingStatus());
-        ps.setInt(6, booking.getDuration());
-        ps.setDouble(7, booking.getTotalPrice());
+        if (booking.getPropertyId() != null) ps.setLong(2, booking.getPropertyId()); else ps.setNull(2, java.sql.Types.BIGINT);
+        ps.setInt(3, booking.getTripId());
+        ps.setInt(4, booking.getServiceId());
+        ps.setDate(5, booking.getBookingDate());
+        ps.setString(6, booking.getBookingStatus());
+        ps.setInt(7, booking.getDuration());
+        ps.setDouble(8, booking.getTotalPrice());
         ps.executeUpdate();
     }
 
@@ -43,6 +44,7 @@ public class BookingService {
         while (rs.next()) {
             Booking b = new Booking(
                 rs.getInt("user_id"),
+                rs.getLong("property_id") == 0 ? null : rs.getLong("property_id"),
                 rs.getInt("trip_id"),
                 rs.getInt("service_id"),
                 rs.getDate("booking_date"),
@@ -67,6 +69,7 @@ public class BookingService {
         while (rs.next()) {
             Booking b = new Booking(
                 rs.getInt("user_id"),
+                rs.getLong("property_id") == 0 ? null : rs.getLong("property_id"),
                 rs.getInt("trip_id"),
                 rs.getInt("service_id"),
                 rs.getDate("booking_date"),
@@ -89,6 +92,15 @@ public class BookingService {
         ps.executeUpdate();
     }
 
+    // UPDATE PRICE
+    public void updateBookingPrice(int bookingId, double totalPrice) throws SQLException {
+        String sql = "UPDATE booking SET total_price=? WHERE booking_id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setDouble(1, totalPrice);
+        ps.setInt(2, bookingId);
+        ps.executeUpdate();
+    }
+
     public void updateBookingDate(int bookingId, java.sql.Date newDate) throws SQLException {
         String sql = "UPDATE booking SET booking_date=? WHERE booking_id=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -97,7 +109,7 @@ public class BookingService {
         ps.executeUpdate();
     }
 
-    // UPDATE
+    // UPDATE STATUS
     public void updateBookingStatus(int bookingId, String status) throws SQLException {
         String sql = "UPDATE booking SET booking_status=? WHERE booking_id=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
