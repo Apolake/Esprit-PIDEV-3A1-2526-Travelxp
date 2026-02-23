@@ -35,7 +35,12 @@ public class TripRepository {
 
     public List<Trip> findByUserId(int userId) throws SQLException {
         String sql = """
-                SELECT * FROM trips WHERE user_id = ? ORDER BY start_date DESC
+                SELECT id, user_id, trip_name, origin, destination, description,
+                       start_date, end_date, status,
+                       budget_amount, currency, total_expenses,
+                       total_xp_earned, notes, cover_image_url,
+                       created_at, updated_at, parent_id
+                FROM trips WHERE user_id = ? ORDER BY start_date DESC
                 """;
         List<Trip> trips = new ArrayList<>();
         Connection cnx = MyDB.getInstance().getConnection();
@@ -65,16 +70,29 @@ public class TripRepository {
         return trips;
     }
 
-    public boolean existsByNameAndDates(String tripName, LocalDate startDate, LocalDate endDate) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM trips WHERE trip_name = ? AND start_date = ? AND end_date = ?";
-
+    public boolean existsByNameAndDates(String tripName, LocalDate startDate, LocalDate endDate, Long userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM trips WHERE trip_name = ? AND start_date = ? AND end_date = ? AND (user_id = ? OR (user_id IS NULL AND ? IS NULL))";
         Connection cnx = MyDB.getInstance().getConnection();
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-
             ps.setString(1, tripName);
             ps.setDate(2, Date.valueOf(startDate));
             ps.setDate(3, Date.valueOf(endDate));
+            if (userId != null) ps.setLong(4, userId); else ps.setNull(4, Types.INTEGER);
+            if (userId != null) ps.setLong(5, userId); else ps.setNull(5, Types.INTEGER);
 
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
+        }
+    }
+
+    public boolean existsByParentAndUser(long parentId, int userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM trips WHERE parent_id = ? AND user_id = ?";
+        Connection cnx = MyDB.getInstance().getConnection();
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, parentId);
+            ps.setInt(2, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 return rs.getInt(1) > 0;
@@ -127,9 +145,44 @@ public class TripRepository {
         }
     }
 
-    public void insertWithParent(Trip t, Long parentId) throws SQLException {
-        t.setParentId(parentId);
-        insert(t);
+    public void addTripParticipant(long tripId, int userId) throws SQLException {
+        String sql = "INSERT IGNORE INTO trip_participants (trip_id, user_id) VALUES (?, ?)";
+        Connection cnx = MyDB.getInstance().getConnection();
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, tripId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
+    }
+
+    public void addActivityParticipant(long activityId, int userId) throws SQLException {
+        String sql = "INSERT IGNORE INTO trip_activity_participants (activity_id, user_id) VALUES (?, ?)";
+        Connection cnx = MyDB.getInstance().getConnection();
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, activityId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
+    }
+
+    public void removeTripParticipant(long tripId, int userId) throws SQLException {
+        String sql = "DELETE FROM trip_participants WHERE trip_id = ? AND user_id = ?";
+        Connection cnx = MyDB.getInstance().getConnection();
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, tripId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
+    }
+
+    public void removeActivityParticipant(long activityId, int userId) throws SQLException {
+        String sql = "DELETE FROM trip_activity_participants WHERE activity_id = ? AND user_id = ?";
+        Connection cnx = MyDB.getInstance().getConnection();
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setLong(1, activityId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
     }
 
     public void update(Trip t) throws SQLException {

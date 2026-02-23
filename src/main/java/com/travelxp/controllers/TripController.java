@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +96,7 @@ public class TripController {
             userScrollPane.setManaged(!isAdmin);
         }
 
-        loadTrips();
+        javafx.application.Platform.runLater(this::loadTrips);
     }
 
     public void setMyTripsMode(boolean mode) {
@@ -129,7 +130,7 @@ public class TripController {
             boolean isAdmin = Main.getSession().getUser().getRole().equals("ADMIN");
             List<Trip> trips;
             
-            if (isAdmin) {
+            if (isAdmin && !isMyTripsMode) {
                 trips = tripService.getAllTrips();
             } else if (isMyTripsMode) {
                 trips = tripService.getTripsByUserId(Main.getSession().getUser().getId());
@@ -165,7 +166,6 @@ public class TripController {
         Label routeLab = new Label(t.getOrigin() + " ➔ " + t.getDestination());
         routeLab.getStyleClass().add("text-muted");
 
-        // For Browse mode, show template budget as the entry fee
         double displayCost = isMyTripsMode ? t.getTotalExpenses() : (t.getBudgetAmount() != null ? t.getBudgetAmount() : 0.0);
         String prefix = isMyTripsMode ? "My Expenses: $" : "Entry Cost: $";
         
@@ -173,78 +173,210 @@ public class TripController {
         costLab.getStyleClass().add("accent");
         costLab.setStyle("-fx-font-weight: bold;");
 
-        Button actionBtn = new Button();
+        VBox activitiesBox = new VBox(5);
         if (isMyTripsMode) {
-            actionBtn.setText("Manage Activities");
-            actionBtn.getStyleClass().add("secondary-button");
-            actionBtn.setOnAction(e -> handleManageActivities(t));
-        } else {
-            actionBtn.setText("Participate");
-            actionBtn.getStyleClass().add("primary-button");
-            actionBtn.setOnAction(e -> handleParticipate(t));
+            try {
+                List<Activity> joined = activityService.getActivitiesByTripId(t.getId()).stream()
+                        .filter(a -> "DONE".equals(a.getStatus()))
+                        .toList();
+                if (!joined.isEmpty()) {
+                    Label header = new Label("Joined Activities:");
+                    header.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
+                    activitiesBox.getChildren().add(header);
+                    for (Activity a : joined) {
+                        Label al = new Label("• " + a.getTitle());
+                        al.setStyle("-fx-font-size: 11px;");
+                        activitiesBox.getChildren().add(al);
+                    }
+                }
+            } catch (SQLException e) {}
         }
-        actionBtn.setMaxWidth(Double.MAX_VALUE);
 
-        card.getChildren().addAll(nameLab, routeLab, costLab, actionBtn);
+        HBox actions = new HBox(10);
+        actions.setPadding(new Insets(10, 0, 0, 0));
+        
+        if (isMyTripsMode) {
+            Button manageBtn = new Button("Activities");
+            manageBtn.getStyleClass().add("secondary-button");
+            manageBtn.setOnAction(e -> handleManageActivities(t));
+            
+            Button cancelBtn = new Button("Cancel Trip");
+            cancelBtn.getStyleClass().add("danger-button");
+            cancelBtn.setOnAction(e -> handleCancelTrip(t));
+            
+            actions.getChildren().addAll(manageBtn, cancelBtn);
+        } else {
+            Button participateBtn = new Button("Participate");
+            participateBtn.getStyleClass().add("primary-button");
+            participateBtn.setMaxWidth(Double.MAX_VALUE);
+            participateBtn.setOnAction(e -> handleParticipate(t));
+            HBox.setHgrow(participateBtn, Priority.ALWAYS);
+            actions.getChildren().add(participateBtn);
+        }
+
+        card.getChildren().addAll(nameLab, routeLab, costLab, activitiesBox, actions);
         return card;
     }
 
-    private void handleParticipate(Trip template) {
-        double cost = template.getBudgetAmount() != null ? template.getBudgetAmount() : 0.0;
-        
+    private void handleCancelTrip(Trip trip) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Participate");
-        confirm.setHeaderText("Join " + template.getTripName() + " for $" + String.format("%.2f", cost) + "?");
-        confirm.setContentText("The entry cost will be deducted from your balance.");
+        confirm.setTitle("Cancel Trip");
+        confirm.setHeaderText("Cancel your participation in " + trip.getTripName() + "?");
+        confirm.setContentText("You will be refunded: $" + String.format("%.2f", trip.getTotalExpenses()));
         
         confirm.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.OK) {
                 try {
-                    if (Main.getSession().getUser().getBalance() < cost) {
-                        showAlert(Alert.AlertType.ERROR, "Insufficient Funds", "Low Balance", "You need $" + cost + " to join this trip.");
-                        return;
-                    }
-
-                    // Deduct Entry Fee
-                    userService.updateBalance(Main.getSession().getUser().getId(), -cost);
-                    Main.getSession().setUser(userService.getUserById(Main.getSession().getUser().getId()));
-
-                    // Create personal copy
-                    Trip myTrip = new Trip();
-                    myTrip.setUserId((long) Main.getSession().getUser().getId());
-                    myTrip.setParentId(template.getId());
-                    myTrip.setTripName(template.getTripName());
-                    myTrip.setOrigin(template.getOrigin());
-                    myTrip.setDestination(template.getDestination());
-                    myTrip.setStartDate(template.getStartDate());
-                    myTrip.setEndDate(template.getEndDate());
-                    myTrip.setStatus("PLANNED");
-                    myTrip.setTotalExpenses(cost); // Initial expense is the entry fee
-                    myTrip.setTotalXpEarned(0);
-                    myTrip.setBudgetAmount(cost);
+                    int userId = Main.getSession().getUser().getId();
+                    double refund = trip.getTotalExpenses();
                     
-                    tripService.addTrip(myTrip);
+                    // 1. Refund user
+                    userService.updateBalance(userId, refund);
+                    Main.getSession().setUser(userService.getUserById(userId));
                     
-                    // Clone Activities
-                    List<Activity> templateActivities = activityService.getActivitiesByTripId(template.getId());
-                    for (Activity ta : templateActivities) {
-                        Activity ma = new Activity();
-                        ma.setTripId(myTrip.getId());
-                        ma.setTitle(ta.getTitle());
-                        ma.setType(ta.getType());
-                        ma.setDescription(ta.getDescription());
-                        ma.setActivityDate(ta.getActivityDate());
-                        ma.setCostAmount(ta.getCostAmount());
-                        ma.setXpEarned(ta.getXpEarned());
-                        ma.setStatus("PLANNED");
-                        activityService.addActivity(ma);
+                    // 2. Remove junction entries (using template link)
+                    if (trip.getParentId() != null) {
+                        tripService.removeTripParticipant(trip.getParentId(), userId);
+                        // Standard practice: we'd also remove all template activity links, 
+                        // but since they are unique to this trip copy, they'll be cleaned up by title if needed.
                     }
                     
-                    showAlert(Alert.AlertType.INFORMATION, "Success", "Joined Trip", "You are now a participant in " + template.getTripName() + "!");
-                    handleMyTrips(null);
+                    // 3. Delete trip copy (cascades to cloned activities)
+                    tripService.deleteTrip(trip.getId());
+                    
+                    showAlert(Alert.AlertType.INFORMATION, "Refunded", "Trip Cancelled", "Your balance has been refunded.");
+                    loadTrips();
                 } catch (SQLException e) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to join", e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "Error", "Cancellation Failed", e.getMessage());
                 }
+            }
+        });
+    }
+
+    private void handleParticipate(Trip template) {
+        try {
+            int userId = Main.getSession().getUser().getId();
+            if (tripService.isUserParticipating(template.getId(), userId)) {
+                showAlert(Alert.AlertType.WARNING, "Already Participating", "Action Denied", "You are already a participant in this trip.");
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Dialog<Double> dialog = new Dialog<>();
+        dialog.setTitle("Participate: " + template.getTripName());
+        dialog.setHeaderText("Join this trip and select activities.");
+        
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+        content.setPrefWidth(500);
+        
+        final double baseEntry = template.getBudgetAmount() != null ? template.getBudgetAmount() : 0.0;
+        Label baseLabel = new Label("Entry Fee: $" + String.format("%.2f", baseEntry));
+        baseLabel.setStyle("-fx-font-weight: bold;");
+        
+        VBox activityList = new VBox(10);
+        Label actTitle = new Label("Available Activities:");
+        actTitle.getStyleClass().add("title-4");
+        activityList.getChildren().add(actTitle);
+        
+        List<CheckBox> checkBoxes = new ArrayList<>();
+        try {
+            List<Activity> templateActivities = activityService.getActivitiesByTripId(template.getId());
+            for (Activity ta : templateActivities) {
+                CheckBox cb = new CheckBox(ta.getTitle() + " (+$" + (ta.getCostAmount() != null ? ta.getCostAmount() : 0.0) + ")");
+                cb.setUserData(ta);
+                checkBoxes.add(cb);
+                activityList.getChildren().add(cb);
+            }
+        } catch (SQLException e) {
+            activityList.getChildren().add(new Label("Failed to load activities."));
+        }
+        
+        Label totalLabel = new Label("Total Cost: $" + String.format("%.2f", baseEntry));
+        totalLabel.getStyleClass().add("accent");
+        totalLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        
+        Runnable updateTotal = () -> {
+            double total = baseEntry;
+            for (CheckBox cb : checkBoxes) {
+                if (cb.isSelected()) {
+                    total += ((Activity)cb.getUserData()).getCostAmount();
+                }
+            }
+            totalLabel.setText("Total Cost: $" + String.format("%.2f", total));
+        };
+        
+        for (CheckBox cb : checkBoxes) cb.setOnAction(e -> updateTotal.run());
+        
+        content.getChildren().addAll(baseLabel, activityList, new Separator(), totalLabel);
+        dialog.getDialogPane().setContent(content);
+        
+        ButtonType joinType = new ButtonType("Join & Pay", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(joinType, ButtonType.CANCEL);
+        
+        dialog.setResultConverter(btn -> {
+            if (btn == joinType) {
+                double total = baseEntry;
+                for (CheckBox cb : checkBoxes) {
+                    if (cb.isSelected()) total += ((Activity)cb.getUserData()).getCostAmount();
+                }
+                return total;
+            }
+            return null;
+        });
+        
+        Optional<Double> result = dialog.showAndWait();
+        result.ifPresent(totalCost -> {
+            try {
+                int userId = Main.getSession().getUser().getId();
+                if (Main.getSession().getUser().getBalance() < totalCost) {
+                    showAlert(Alert.AlertType.ERROR, "Insufficient Funds", "Low Balance", "You need $" + totalCost + " to join.");
+                    return;
+                }
+
+                userService.updateBalance(userId, -totalCost);
+                Main.getSession().setUser(userService.getUserById(userId));
+
+                Trip myTrip = new Trip();
+                myTrip.setUserId((long) userId);
+                myTrip.setParentId(template.getId());
+                myTrip.setTripName(template.getTripName());
+                myTrip.setOrigin(template.getOrigin());
+                myTrip.setDestination(template.getDestination());
+                myTrip.setStartDate(template.getStartDate());
+                myTrip.setEndDate(template.getEndDate());
+                myTrip.setStatus("PLANNED");
+                myTrip.setTotalExpenses(totalCost); 
+                myTrip.setTotalXpEarned(0);
+                myTrip.setBudgetAmount(baseEntry);
+                
+                tripService.addTrip(myTrip);
+                tripService.addTripParticipant(template.getId(), userId);
+                
+                for (CheckBox cb : checkBoxes) {
+                    Activity ta = (Activity) cb.getUserData();
+                    Activity ma = new Activity();
+                    ma.setTripId(myTrip.getId());
+                    ma.setTitle(ta.getTitle());
+                    ma.setType(ta.getType());
+                    ma.setDescription(ta.getDescription());
+                    ma.setActivityDate(ta.getActivityDate());
+                    ma.setCostAmount(ta.getCostAmount());
+                    ma.setXpEarned(ta.getXpEarned());
+                    ma.setStatus(cb.isSelected() ? "DONE" : "PLANNED");
+                    activityService.addActivity(ma);
+                    
+                    if (cb.isSelected()) {
+                        tripService.addActivityParticipant(ta.getId(), userId);
+                    }
+                }
+                
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Joined Trip", "Trip added to your journeys!");
+                setMyTripsMode(true);
+            } catch (SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to join", e.getMessage());
             }
         });
     }
@@ -256,7 +388,7 @@ public class TripController {
         
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));
-        content.setPrefWidth(450);
+        content.setPrefWidth(550);
         
         try {
             List<Activity> activities = activityService.getActivitiesByTripId(trip.getId());
@@ -272,28 +404,73 @@ public class TripController {
                     HBox.setHgrow(spacer, Priority.ALWAYS);
                     
                     if ("DONE".equals(a.getStatus())) {
-                        Label paid = new Label("✓ Participating");
-                        paid.setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
-                        row.getChildren().addAll(info, spacer, paid);
+                        Label participating = new Label("✓ Joined");
+                        participating.setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+                        
+                        Button refundBtn = new Button("Refund");
+                        refundBtn.getStyleClass().add("danger-button");
+                        refundBtn.setOnAction(e -> {
+                            try {
+                                double refund = a.getCostAmount() != null ? a.getCostAmount() : 0.0;
+                                int userId = Main.getSession().getUser().getId();
+                                
+                                userService.updateBalance(userId, refund);
+                                Main.getSession().setUser(userService.getUserById(userId));
+                                
+                                a.setStatus("PLANNED");
+                                activityService.updateActivity(a);
+                                
+                                trip.setTotalExpenses(trip.getTotalExpenses() - refund);
+                                tripService.updateTrip(trip);
+                                
+                                if (trip.getParentId() != null) {
+                                    List<Activity> templateActs = activityService.getActivitiesByTripId(trip.getParentId());
+                                    for (Activity tact : templateActs) {
+                                        if (tact.getTitle().equals(a.getTitle())) {
+                                            tripService.removeActivityParticipant(tact.getId(), userId);
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                showAlert(Alert.AlertType.INFORMATION, "Refunded", "Activity Cancelled", "The cost has been returned to your balance.");
+                                dialog.close();
+                                loadTrips();
+                            } catch (SQLException ex) {
+                                showAlert(Alert.AlertType.ERROR, "Error", "Refund Failed", ex.getMessage());
+                            }
+                        });
+                        row.getChildren().addAll(info, spacer, participating, refundBtn);
                     } else {
-                        Button payBtn = new Button("Join Activity");
+                        Button payBtn = new Button("Pay & Join");
                         payBtn.getStyleClass().add("accent");
                         payBtn.setOnAction(e -> {
                             try {
                                 double cost = a.getCostAmount() != null ? a.getCostAmount() : 0.0;
+                                int userId = Main.getSession().getUser().getId();
                                 if (Main.getSession().getUser().getBalance() < cost) {
                                     showAlert(Alert.AlertType.ERROR, "Insufficient Funds", "Low Balance", "You need $" + cost + " to join.");
                                     return;
                                 }
                                 
-                                userService.updateBalance(Main.getSession().getUser().getId(), -cost);
-                                Main.getSession().setUser(userService.getUserById(Main.getSession().getUser().getId()));
+                                userService.updateBalance(userId, -cost);
+                                Main.getSession().setUser(userService.getUserById(userId));
                                 
                                 a.setStatus("DONE");
                                 activityService.updateActivity(a);
                                 
                                 trip.setTotalExpenses(trip.getTotalExpenses() + cost);
                                 tripService.updateTrip(trip);
+                                
+                                if (trip.getParentId() != null) {
+                                    List<Activity> templateActs = activityService.getActivitiesByTripId(trip.getParentId());
+                                    for (Activity tact : templateActs) {
+                                        if (tact.getTitle().equals(a.getTitle())) {
+                                            tripService.addActivityParticipant(tact.getId(), userId);
+                                            break;
+                                        }
+                                    }
+                                }
                                 
                                 showAlert(Alert.AlertType.INFORMATION, "Success", "Activity Joined", "Cost added to trip expenses.");
                                 dialog.close();
@@ -404,13 +581,13 @@ public class TripController {
     }
 
     private void populateForm(Trip t) {
-        nameField.setText(t.getTripName());
-        originField.setText(t.getOrigin());
-        destinationField.setText(t.getDestination());
-        startDatePicker.setValue(t.getStartDate());
-        endDatePicker.setValue(t.getEndDate());
-        statusCombo.setValue(t.getStatus());
-        budgetField.setText(t.getBudgetAmount() != null ? String.valueOf(t.getBudgetAmount()) : "0");
+        if (nameField != null) nameField.setText(t.getTripName());
+        if (originField != null) originField.setText(t.getOrigin());
+        if (destinationField != null) destinationField.setText(t.getDestination());
+        if (startDatePicker != null) startDatePicker.setValue(t.getStartDate());
+        if (endDatePicker != null) endDatePicker.setValue(t.getEndDate());
+        if (statusCombo != null) statusCombo.setValue(t.getStatus());
+        if (budgetField != null) budgetField.setText(t.getBudgetAmount() != null ? String.valueOf(t.getBudgetAmount()) : "0");
     }
 
     @FXML private void handleClearForm() { clearForm(); }

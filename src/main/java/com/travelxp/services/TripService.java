@@ -23,12 +23,32 @@ public class TripService {
         return repo.findByParentId(parentId);
     }
 
+    public boolean isUserParticipating(long templateId, int userId) throws SQLException {
+        return repo.existsByParentAndUser(templateId, userId);
+    }
+
+    public void addTripParticipant(long templateId, int userId) throws SQLException {
+        repo.addTripParticipant(templateId, userId);
+    }
+
+    public void addActivityParticipant(long templateActivityId, int userId) throws SQLException {
+        repo.addActivityParticipant(templateActivityId, userId);
+    }
+
+    public void removeTripParticipant(long templateId, int userId) throws SQLException {
+        repo.removeTripParticipant(templateId, userId);
+    }
+
+    public void removeActivityParticipant(long templateActivityId, int userId) throws SQLException {
+        repo.removeActivityParticipant(templateActivityId, userId);
+    }
+
     public void addTrip(Trip t) throws SQLException {
         validate(t);
 
-        boolean exists = repo.existsByNameAndDates(t.getTripName(), t.getStartDate(), t.getEndDate());
+        boolean exists = repo.existsByNameAndDates(t.getTripName(), t.getStartDate(), t.getEndDate(), t.getUserId());
         if (exists) {
-            throw new IllegalArgumentException("Trip already exists (same name + dates).");
+            throw new IllegalArgumentException("You already have a trip with this name and dates.");
         }
 
         if (t.getStatus() == null || t.getStatus().trim().isEmpty()) t.setStatus("PLANNED");
