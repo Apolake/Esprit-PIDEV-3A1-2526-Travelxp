@@ -58,6 +58,42 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button onAction="#handleManageTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="Trips">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-advance-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button onAction="#handleActivities" maxWidth="Infinity" styleClass="nav-button, flat" text="Activities">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button onAction="#handleManageTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="Trips">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-advance-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button onAction="#handleActivities" maxWidth="Infinity" styleClass="nav-button, flat" text="Activities">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                   <Button onAction="#handleManageComments" maxWidth="Infinity" styleClass="nav-button, flat" text="Comments">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">

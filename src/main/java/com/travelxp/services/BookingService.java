@@ -14,16 +14,14 @@ import com.travelxp.utils.MyDB;
 
 public class BookingService {
 
-    private Connection cnx;
-
-    public BookingService() {
-        cnx = MyDB.getInstance().getConnection();
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
     }
 
     // CREATE
     public void addBooking(Booking booking) throws SQLException {
         String sql = "INSERT INTO booking (user_id, property_id, trip_id, service_id, booking_date, booking_status, duration, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, booking.getUserId());
             if (booking.getPropertyId() != null) ps.setLong(2, booking.getPropertyId()); else ps.setNull(2, java.sql.Types.BIGINT);
             ps.setInt(3, booking.getTripId());
@@ -47,7 +45,7 @@ public class BookingService {
         if (booking.getExtraServices() == null || booking.getExtraServices().isEmpty()) return;
         
         String sql = "INSERT INTO booking_services (booking_id, service_id) VALUES (?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             for (Service s : booking.getExtraServices()) {
                 ps.setInt(1, booking.getBookingId());
                 ps.setInt(2, s.getServiceId());
@@ -61,7 +59,7 @@ public class BookingService {
     public List<Booking> getAllBookings() throws SQLException {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM booking";
-        try (Statement st = cnx.createStatement();
+        try (Statement st = getConnection().createStatement();
              ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 Booking b = mapResultSetToBooking(rs);
@@ -76,7 +74,7 @@ public class BookingService {
     public List<Booking> getBookingsByUserId(int userId) throws SQLException {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM booking WHERE user_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -92,7 +90,7 @@ public class BookingService {
     private List<Service> getServicesForBooking(int bookingId) throws SQLException {
         List<Service> services = new ArrayList<>();
         String sql = "SELECT s.* FROM service s JOIN booking_services bs ON s.service_id = bs.service_id WHERE bs.booking_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, bookingId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -129,7 +127,7 @@ public class BookingService {
     // UPDATE DURATION
     public void updateBookingDuration(int bookingId, int duration) throws SQLException {
         String sql = "UPDATE booking SET duration=? WHERE booking_id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, duration);
             ps.setInt(2, bookingId);
             ps.executeUpdate();
@@ -139,7 +137,7 @@ public class BookingService {
     // UPDATE PRICE
     public void updateBookingPrice(int bookingId, double totalPrice) throws SQLException {
         String sql = "UPDATE booking SET total_price=? WHERE booking_id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setDouble(1, totalPrice);
             ps.setInt(2, bookingId);
             ps.executeUpdate();
@@ -148,7 +146,7 @@ public class BookingService {
 
     public void updateBookingDate(int bookingId, java.sql.Date newDate) throws SQLException {
         String sql = "UPDATE booking SET booking_date=? WHERE booking_id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setDate(1, newDate);
             ps.setInt(2, bookingId);
             ps.executeUpdate();
@@ -158,7 +156,7 @@ public class BookingService {
     // UPDATE STATUS
     public void updateBookingStatus(int bookingId, String status) throws SQLException {
         String sql = "UPDATE booking SET booking_status=? WHERE booking_id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, status);
             ps.setInt(2, bookingId);
             ps.executeUpdate();
@@ -168,7 +166,7 @@ public class BookingService {
     // DELETE
     public void deleteBooking(int bookingId) throws SQLException {
         String sql = "DELETE FROM booking WHERE booking_id=?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, bookingId);
             ps.executeUpdate();
         }

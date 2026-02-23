@@ -49,11 +49,29 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button onAction="#handleBrowseTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="Browse Trips">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-advance-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                   <Button maxWidth="Infinity" styleClass="nav-button, accent" text="My Bookings">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
                               <Image url="@../../../icons/icons8-done-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button onAction="#handleMyTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="My Trips">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-advance-50.png" />
                            </image>
                         </ImageView>
                      </graphic>

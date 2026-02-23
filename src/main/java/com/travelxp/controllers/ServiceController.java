@@ -193,6 +193,16 @@ public class ServiceController {
     }
 
     @FXML
+    private void handleManageTrips(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-trip-view.fxml");
+    }
+
+    @FXML
+    private void handleActivities(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-activity-view.fxml");
+    }
+
+    @FXML
     private void handleManageComments(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/moderation-view.fxml");
     }

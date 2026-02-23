@@ -171,6 +171,48 @@ public class PropertyController {
     }
 
     @FXML
+    private void handleManageTrips(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/admin-trip-view.fxml");
+    }
+
+    @FXML
+    private void handleBrowseTrips(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/travelxp/views/trip-view.fxml"));
+            Parent root = loader.load();
+            TripController controller = loader.getController();
+            controller.setMyTripsMode(false);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMyTrips(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/travelxp/views/trip-view.fxml"));
+            Parent root = loader.load();
+            TripController controller = loader.getController();
+            controller.setMyTripsMode(true);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleActivities(ActionEvent event) {
+        if (Main.getSession().getUser().getRole().equals("ADMIN")) {
+            changeScene(event, "/com/travelxp/views/admin-activity-view.fxml");
+        }
+    }
+
+    @FXML
     private void handleManageComments(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/moderation-view.fxml");
     }

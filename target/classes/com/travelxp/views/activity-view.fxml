@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.travelxp.controllers.BookingController" stylesheets="@../../../style.css" styleClass="root">
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.travelxp.controllers.ActivityController" stylesheets="@../../../style.css" styleClass="root">
    <left>
       <VBox styleClass="sidebar" prefWidth="280">
          <children>
@@ -49,29 +49,29 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button onAction="#handleBrowseTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="Browse Trips">
-                     <graphic>
-                        <ImageView fitHeight="20" fitWidth="20">
-                           <image>
-                              <Image url="@../../../icons/icons8-advance-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button maxWidth="Infinity" styleClass="nav-button, accent" text="My Bookings">
-                     <graphic>
-                        <ImageView fitHeight="20" fitWidth="20">
-                           <image>
-                              <Image url="@../../../icons/icons8-done-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
                   <Button onAction="#handleMyTrips" maxWidth="Infinity" styleClass="nav-button, flat" text="My Trips">
                      <graphic>
                         <ImageView fitHeight="20" fitWidth="20">
                            <image>
                               <Image url="@../../../icons/icons8-advance-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button maxWidth="Infinity" styleClass="nav-button, accent" text="Activities">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button onAction="#handleMyBookings" maxWidth="Infinity" styleClass="nav-button, flat" text="My Bookings">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-done-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -129,64 +129,24 @@
    <center>
       <StackPane styleClass="center-bg">
          <children>
-            <Pane fx:id="animatedBg" styleClass="animated-bg" visible="false" />
             <VBox spacing="20">
                <padding>
                   <Insets top="20" right="20" bottom="20" left="20"/>
                </padding>
                <children>
-                  <GridPane fx:id="adminForm" hgap="10" vgap="10" styleClass="card">
-                     <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                     </padding>
+                  <HBox spacing="20" alignment="CENTER_LEFT" styleClass="top-bar">
                      <children>
-                        <Label text="User ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <TextField fx:id="userIdField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                        
-                        <Label text="Trip ID:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                        <TextField fx:id="tripIdField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-                        
-                        <Label text="Service ID:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="serviceIdField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        
-                        <Label text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                        <DatePicker fx:id="bookingDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                        
-                        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <ComboBox fx:id="bookingStatusCombo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        
-                        <HBox spacing="10" GridPane.columnIndex="3" GridPane.rowIndex="2" alignment="CENTER_RIGHT">
-                           <children>
-                              <Button text="Clear" onAction="#handleClearForm" styleClass="button"/>
-                              <Button text="Add" onAction="#handleAddBooking" styleClass="button, primary-button"/>
-                              <Button text="Update Status" onAction="#handleUpdateBookingStatus" styleClass="button, secondary-button"/>
-                              <Button text="Delete" onAction="#handleDeleteBooking" styleClass="button, danger-button"/>
-                           </children>
-                        </HBox>
+                        <Label text="My Activities" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
                      </children>
-                  </GridPane>
-                  
-                  <TableView fx:id="bookingTable" VBox.vgrow="ALWAYS">
-                     <columns>
-                        <TableColumn fx:id="bookingIdCol" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="userIdCol" text="User" prefWidth="60"/>
-                        <TableColumn fx:id="tripIdCol" text="Trip" prefWidth="60"/>
-                        <TableColumn fx:id="serviceIdCol" text="Service" prefWidth="60"/>
-                        <TableColumn fx:id="bookingDateCol" text="Date" prefWidth="120"/>
-                        <TableColumn fx:id="durationCol" text="Duration (Days)" prefWidth="100"/>
-                        <TableColumn fx:id="totalPriceCol" text="Total Price" prefWidth="100"/>
-                        <TableColumn fx:id="bookingStatusCol" text="Status" prefWidth="100"/>
-                        <TableColumn fx:id="actionsCol" text="Actions" prefWidth="180"/>
-                     </columns>
-                  </TableView>
+                  </HBox>
 
                   <ScrollPane fx:id="userScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="edge-to-edge">
                      <content>
-                        <VBox fx:id="userBookingsContainer" spacing="20">
+                        <FlowPane fx:id="userActivitiesContainer" hgap="20" vgap="20">
                            <padding>
                               <Insets top="20" right="20" bottom="20" left="20"/>
                            </padding>
-                        </VBox>
+                        </FlowPane>
                      </content>
                   </ScrollPane>
                </children>

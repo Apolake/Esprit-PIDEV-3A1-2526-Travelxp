@@ -141,6 +141,40 @@ public class ChangePasswordController {
     }
 
     @FXML
+    private void handleBrowseTrips(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/travelxp/views/trip-view.fxml"));
+            Parent root = loader.load();
+            TripController controller = loader.getController();
+            controller.setMyTripsMode(false);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMyTrips(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/travelxp/views/trip-view.fxml"));
+            Parent root = loader.load();
+            TripController controller = loader.getController();
+            controller.setMyTripsMode(true);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            com.travelxp.utils.ThemeManager.applyTheme(stage.getScene());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleActivities(ActionEvent event) {
+    }
+
+    @FXML
     private void handleEditProfile(ActionEvent event) {
         changeScene(event, "/com/travelxp/views/edit_profile.fxml");
     }
