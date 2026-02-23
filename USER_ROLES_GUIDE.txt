@@ -1,0 +1,105 @@
+============================================================
+          TRAVELXP - SYSTEM ROLES & CAPABILITIES GUIDE
+============================================================
+
+This guide outlines the specific permissions and functional 
+capabilities for the two primary roles in the TravelXP system.
+
+------------------------------------------------------------
+1. ADMIN ROLE (Management & Oversight)
+------------------------------------------------------------
+The Admin role is designed for system maintenance and control. 
+Admins use a high-efficiency tabular interface (TableView).
+
+- USER MANAGEMENT:
+  * View a list of all registered users.
+  * Create new user accounts manually.
+  * Edit user details (Username, Email, Bio, Profile Image).
+  * Promote/Demote users (Change Role between USER and ADMIN).
+  * Adjust gamification stats (Manually set XP and Level).
+  * Reset passwords for users who lose access.
+  * Delete user accounts from the system.
+
+- PROPERTY MANAGEMENT:
+  * Create, Update, and Delete property listings.
+  * Upload and manage property images.
+  * Toggle property availability (Active/Inactive).
+
+- OFFER & DISCOUNT MANAGEMENT:
+  * Create discount offers linked to specific properties.
+  * Set start/end dates for automatic discount application.
+  * Manage active status of promotions.
+
+- BOOKING OVERSIGHT:
+  * View every booking made in the system.
+  * Manually update booking statuses (Pending, Confirmed, etc.).
+  * Delete problematic or fraudulent booking records.
+
+- TRIP TEMPLATE CREATION:
+  * Create "Trip Templates" (Public trips that users can join).
+  * Define Trip routes (Origin ➔ Destination) and Entry Fees (Budget).
+  * Manage the list of Participants for every trip template.
+
+- ACTIVITY & SERVICE MANAGEMENT:
+  * Add/Edit/Delete activities linked to Trip Templates.
+  * Manage the catalog of Extra Services (e.g., Vale, Events).
+
+- CONTENT MODERATION:
+  * Edit or delete any Feedback or Comment posted by any user.
+  * Maintain community standards in public forums.
+
+------------------------------------------------------------
+2. USER ROLE (Personal Journey & Interaction)
+------------------------------------------------------------
+The User role is designed for exploration and personal travel 
+tracking. Users enjoy a modern, card-based browsing experience.
+
+- PERSONAL DASHBOARD:
+  * View Profile summary (Bio, Birthday, Account Balance).
+  * Track Gamification Progress (Current Rank, Level, and XP).
+  * Browse "Featured Properties" and "Featured Trips" directly.
+  * Recharge account balance at any time.
+
+- PROPERTY BROWSING & BOOKING:
+  * Browse all active properties in a card-based layout.
+  * Book properties by selecting dates and duration.
+  * Select extra services (Nightly fees added to total).
+  * Automatic balance deduction upon booking confirmation.
+
+- TRIP PARTICIPATION (The Journey):
+  * BROWSE TRIPS: View available trip templates created by admins.
+  * PARTICIPATE: Join a trip by paying the Entry Fee.
+  * SELECTIVE ACTIVITIES: Choose specific activities to join upfront.
+  * MY TRIPS: View personal itineraries.
+  * MANAGE ACTIVITIES: Join/Pay for new activities later or 
+    Refund/Cancel activities you no longer wish to do.
+  * CANCEL TRIP: Cancel an entire journey for a full refund.
+
+- BOOKING MANAGEMENT:
+  * View personal booking history.
+  * Edit duration of upcoming stays (Balance adjusts automatically).
+  * Cancel bookings for a full refund to account balance.
+
+- GAMIFICATION & TASKS:
+  * Complete Quests (First Booking, Trip Explorer, etc.) to earn XP.
+  * Level up to earn higher ranks and titles.
+
+- FEEDBACK & SOCIAL:
+  * Post public feedback about the system.
+  * View feedback from others.
+  * Add, edit, or delete personal comments on feedback threads.
+
+- PROFILE & SECURITY:
+  * Update personal info (Email, Bio, Birthday, Profile Image).
+  * Change account password.
+
+------------------------------------------------------------
+3. SHARED CAPABILITIES (Universal Features)
+------------------------------------------------------------
+- THEME TOGGLING: Instantly switch between Dark (Gold/Black) 
+  and Light (Blue/White) modes on any screen.
+- ANIMATED BACKGROUNDS: Enjoy a dynamic, "alive" UI with 
+  floating background elements across all menus.
+- PERSISTENT SIDEBAR: Seamless navigation between all 
+  authorized modules.
+============================================================
