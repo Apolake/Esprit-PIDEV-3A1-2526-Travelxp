@@ -13,6 +13,7 @@ public class Booking {
     private String bookingStatus;
     private int duration; // In days
     private double totalPrice;
+    private java.util.List<Service> extraServices = new java.util.ArrayList<>();
 
     public Booking() {}
 
@@ -53,4 +54,7 @@ public class Booking {
 
     public double getTotalPrice() { return totalPrice; }
     public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+
+    public java.util.List<Service> getExtraServices() { return extraServices; }
+    public void setExtraServices(java.util.List<Service> extraServices) { this.extraServices = extraServices; }
 }

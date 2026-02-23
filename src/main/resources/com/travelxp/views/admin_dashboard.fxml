@@ -70,6 +70,15 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button onAction="#handleManageServices" maxWidth="Infinity" styleClass="nav-button, flat" text="Services">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
             

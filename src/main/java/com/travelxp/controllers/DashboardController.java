@@ -23,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -50,7 +51,7 @@ public class DashboardController {
     @FXML private ProgressBar xpProgressBar;
     @FXML private Pane animatedBg;
     
-    @FXML private VBox propertyShowcase;
+    @FXML private TilePane propertyShowcase;
     @FXML private ScrollPane propertyScrollPane;
 
     private final UserService userService = new UserService();
@@ -90,24 +91,25 @@ public class DashboardController {
     private VBox createPropertyCard(Property p) {
         VBox card = new VBox(15);
         card.getStyleClass().add("card");
-        card.setMaxWidth(Double.MAX_VALUE);
+        card.setPrefWidth(350); // Fixed width for TilePane columns
+        card.setMinWidth(350);
+        card.setMaxWidth(350);
         card.setPadding(new Insets(15));
         card.setAlignment(javafx.geometry.Pos.TOP_CENTER);
 
         // Image Preview - Main Focus
         StackPane imageContainer = new StackPane();
-        imageContainer.setPrefHeight(200);
-        imageContainer.setMaxHeight(200);
+        imageContainer.setPrefHeight(180);
+        imageContainer.setMaxHeight(180);
         imageContainer.getStyleClass().add("showcase-image-container");
         
         ImageView iv = new ImageView();
-        iv.setFitHeight(200);
+        iv.setFitHeight(180);
+        iv.setFitWidth(320);
         iv.setPreserveRatio(true);
         
         // Clip for rounded corners
-        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
-        clip.widthProperty().bind(imageContainer.widthProperty());
-        clip.heightProperty().bind(imageContainer.heightProperty());
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(320, 180);
         clip.setArcWidth(30);
         clip.setArcHeight(30);
         imageContainer.setClip(clip);
@@ -118,9 +120,6 @@ public class DashboardController {
                 iv.setImage(new Image(imgFile.toURI().toString(), true));
             }
         }
-        
-        // Ensure image fits width
-        iv.fitWidthProperty().bind(imageContainer.widthProperty());
         
         imageContainer.getChildren().add(iv);
 
@@ -133,7 +132,7 @@ public class DashboardController {
         VBox textInfo = new VBox(2);
         Label title = new Label(p.getTitle());
         title.getStyleClass().add("title-4");
-        title.setStyle("-fx-font-size: 18px;");
+        title.setStyle("-fx-font-size: 16px;");
         title.setWrapText(true);
 
         Label location = new Label(p.getCity() + ", " + p.getCountry());
@@ -145,7 +144,7 @@ public class DashboardController {
         priceInfo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         Label price = new Label("$" + p.getPricePerNight());
         price.getStyleClass().add("accent");
-        price.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+        price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
         Label night = new Label("/ night");
         night.getStyleClass().add("text-muted");
         priceInfo.getChildren().addAll(price, night);
@@ -155,7 +154,7 @@ public class DashboardController {
         Button viewBtn = new Button("Book This Property");
         viewBtn.getStyleClass().add("accent");
         viewBtn.setMaxWidth(Double.MAX_VALUE);
-        viewBtn.setPrefHeight(40);
+        viewBtn.setPrefHeight(35);
         viewBtn.setOnAction(e -> handleBrowseProperties(e));
 
         infoBox.getChildren().addAll(topInfo, viewBtn);

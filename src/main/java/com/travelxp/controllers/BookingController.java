@@ -3,6 +3,7 @@ package com.travelxp.controllers;
 import com.travelxp.Main;
 import com.travelxp.models.Booking;
 import com.travelxp.models.Property;
+import com.travelxp.models.Service;
 import com.travelxp.services.BookingService;
 import com.travelxp.services.PropertyService;
 import com.travelxp.services.UserService;
@@ -29,6 +30,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BookingController {
 
@@ -212,7 +214,15 @@ public class BookingController {
         dateLab.getStyleClass().add("text-muted");
         Label durationLab = new Label("Duration: " + b.getDuration() + " days");
         durationLab.getStyleClass().add("text-muted");
-        left.getChildren().addAll(idLab, dateLab, durationLab);
+        
+        String servicesStr = b.getExtraServices().stream()
+                .map(Service::getServiceType)
+                .collect(Collectors.joining(", "));
+        Label servicesLab = new Label("Extra Services: " + (servicesStr.isEmpty() ? "None" : servicesStr));
+        servicesLab.getStyleClass().add("text-small");
+        servicesLab.setStyle("-fx-text-fill: -fx-accent-color;");
+
+        left.getChildren().addAll(idLab, dateLab, durationLab, servicesLab);
         HBox.setHgrow(left, javafx.scene.layout.Priority.ALWAYS);
 
         VBox right = new VBox(5);

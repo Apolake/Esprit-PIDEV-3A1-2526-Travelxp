@@ -225,35 +225,19 @@
                                     <Region HBox.hgrow="ALWAYS" />
                                     <VBox spacing="10">
                                        <children>
-                                          <Button onAction="#scrollPropertiesUp" styleClass="flat">
-                                             <graphic>
-                                                <ImageView fitHeight="16" fitWidth="16" rotate="90">
-                                                   <image>
-                                                      <Image url="@../../../icons/icons8-back-to-50.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </Button>
-                                          <Button onAction="#scrollPropertiesDown" styleClass="flat">
-                                             <graphic>
-                                                <ImageView fitHeight="16" fitWidth="16" rotate="90">
-                                                   <image>
-                                                      <Image url="@../../../icons/icons8-forward-arrow-50.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </Button>
+                                          <Button onAction="#scrollPropertiesUp" styleClass="flat" text="🔼" style="-fx-font-size: 20px;"/>
+                                          <Button onAction="#scrollPropertiesDown" styleClass="flat" text="🔽" style="-fx-font-size: 20px;"/>
                                        </children>
                                     </VBox>
                                  </children>
                               </HBox>
-                              <ScrollPane fx:id="propertyScrollPane" fitToWidth="true" minHeight="400" prefHeight="500" styleClass="edge-to-edge" vbarPolicy="NEVER" hbarPolicy="NEVER">
+                              <ScrollPane fx:id="propertyScrollPane" fitToWidth="true" minHeight="400" prefHeight="600" styleClass="edge-to-edge" vbarPolicy="NEVER" hbarPolicy="NEVER">
                                  <content>
-                                    <VBox fx:id="propertyShowcase" spacing="25">
+                                    <TilePane fx:id="propertyShowcase" hgap="25" vgap="25" prefColumns="2">
                                        <padding>
                                           <Insets bottom="10" left="10" right="10" top="10" />
                                        </padding>
-                                    </VBox>
+                                    </TilePane>
                                  </content>
                               </ScrollPane>
                            </children>

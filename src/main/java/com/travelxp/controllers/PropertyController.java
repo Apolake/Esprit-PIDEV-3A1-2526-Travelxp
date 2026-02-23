@@ -4,9 +4,11 @@ import com.travelxp.Main;
 import com.travelxp.models.Booking;
 import com.travelxp.models.Offer;
 import com.travelxp.models.Property;
+import com.travelxp.models.Service;
 import com.travelxp.services.BookingService;
 import com.travelxp.services.OfferService;
 import com.travelxp.services.PropertyService;
+import com.travelxp.services.ServiceService;
 import com.travelxp.utils.ImageUtil;
 import com.travelxp.utils.ThemeManager;
 import com.travelxp.services.UserService;
@@ -78,6 +80,7 @@ public class PropertyController {
 	private final PropertyService propertyService = new PropertyService();
 	private final BookingService bookingService = new BookingService();
 	private final OfferService offerService = new OfferService();
+	private final ServiceService serviceService = new ServiceService();
 	private final UserService userService = new UserService();
 	private final ObservableList<Property> propertyData = FXCollections.observableArrayList();
 
@@ -229,8 +232,10 @@ public class PropertyController {
 		final double basePrice = property.getPricePerNight().doubleValue();
 		
         final List<Offer> allOffers = new ArrayList<>();
+        final List<Service> availableExtraServices = new ArrayList<>();
         try {
             allOffers.addAll(offerService.getAllActiveOffersForProperty(property.getId()));
+            availableExtraServices.addAll(serviceService.getAllServices());
         } catch (SQLException e) {
             // ignore
         }
@@ -245,6 +250,17 @@ public class PropertyController {
 		TextField durationField = new TextField("1");
 		Label offerLabel = new Label("No active offers for selected date.");
         offerLabel.setStyle("-fx-text-fill: #999;");
+		
+        VBox servicesBox = new VBox(5);
+        servicesBox.getChildren().add(new Label("Extra Services (Price per night):"));
+        List<CheckBox> serviceCheckboxes = new ArrayList<>();
+        for (Service s : availableExtraServices) {
+            CheckBox cb = new CheckBox(s.getServiceType() + " (+$" + s.getPrice() + ")");
+            cb.setUserData(s);
+            serviceCheckboxes.add(cb);
+            servicesBox.getChildren().add(cb);
+        }
+
 		Label totalLabel = new Label("Total Price: $" + String.format("%.2f", basePrice));
 		
         java.lang.Runnable updatePrices = () -> {
@@ -272,7 +288,14 @@ public class PropertyController {
                     offerLabel.setStyle("-fx-text-fill: #999;");
                 }
 
-                double total = basePrice * days * (1 - currentDiscount/100.0);
+                double servicesNightly = 0;
+                for (CheckBox cb : serviceCheckboxes) {
+                    if (cb.isSelected()) {
+                        servicesNightly += ((Service)cb.getUserData()).getPrice();
+                    }
+                }
+
+                double total = (basePrice + servicesNightly) * days * (1 - currentDiscount/100.0);
                 totalLabel.setText("Total Price: $" + String.format("%.2f", total));
             } catch (NumberFormatException e) {
                 totalLabel.setText("Invalid duration");
@@ -281,10 +304,14 @@ public class PropertyController {
 
 		durationField.textProperty().addListener((obs, oldV, newV) -> updatePrices.run());
         datePicker.valueProperty().addListener((obs, oldV, newV) -> updatePrices.run());
+        for (CheckBox cb : serviceCheckboxes) {
+            cb.selectedProperty().addListener((obs, oldV, newV) -> updatePrices.run());
+        }
 
 		content.getChildren().addAll(
 			new Label("Booking Date:"), datePicker,
 			new Label("Duration (Days):"), durationField,
+            servicesBox,
             offerLabel,
 			totalLabel
 		);
@@ -304,9 +331,19 @@ public class PropertyController {
                         }
                     }
 
-					double finalPrice = basePrice * duration * (1 - currentDiscount/100.0);
+                    double servicesNightly = 0;
+                    List<Service> selectedServices = new ArrayList<>();
+                    for (CheckBox cb : serviceCheckboxes) {
+                        if (cb.isSelected()) {
+                            Service s = (Service)cb.getUserData();
+                            servicesNightly += s.getPrice();
+                            selectedServices.add(s);
+                        }
+                    }
+
+					double finalPrice = (basePrice + servicesNightly) * duration * (1 - currentDiscount/100.0);
 					
-					return new Booking(
+					Booking b = new Booking(
 						Main.getSession().getUser().getId(),
 						property.getId(), 
 						0, 
@@ -316,6 +353,8 @@ public class PropertyController {
 						duration,
 						finalPrice
 					);
+                    b.setExtraServices(selectedServices);
+                    return b;
 				} catch (NumberFormatException e) {
 					return null;
 				}

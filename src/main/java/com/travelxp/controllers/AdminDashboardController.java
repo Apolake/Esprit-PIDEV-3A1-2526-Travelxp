@@ -290,6 +290,11 @@ public class AdminDashboardController {
     }
 
     @FXML
+    private void handleManageServices(ActionEvent event) {
+        changeScene(event, "/com/travelxp/views/service-view.fxml");
+    }
+
+    @FXML
     private void handleCreateUser() {
         Dialog<User> dialog = new Dialog<>();
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
