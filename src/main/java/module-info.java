@@ -1,8 +1,11 @@
 module com.travelxp {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires java.sql;
+    requires java.net.http;
     requires jbcrypt;
+    requires com.google.gson;
 
     opens com.travelxp to javafx.graphics, javafx.fxml;
     opens com.travelxp.controllers to javafx.fxml;

@@ -196,7 +196,7 @@ public class OfferController {
 			throw new IllegalArgumentException(fieldName + " is required.");
 		}
 		try {
-			return Long.parseLong(value.trim());
+			return Long.parseLong(value);
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(fieldName + " must be a valid number.");
 		}

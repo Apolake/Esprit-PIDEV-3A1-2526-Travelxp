@@ -1,12 +1,17 @@
 package com.travelxp.services;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+
 import com.travelxp.models.User;
 import com.travelxp.utils.MyDB;
 import com.travelxp.utils.PasswordUtil;
 
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class UserService {
     private final Connection connection;

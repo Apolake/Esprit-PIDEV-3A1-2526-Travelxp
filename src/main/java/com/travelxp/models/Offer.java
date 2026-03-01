@@ -15,6 +15,9 @@ public class Offer {
 	private Boolean isActive;
 	private LocalDateTime createdAt;
 
+	/* reference to owning property (optional) */
+	private Property property;
+
 	public Offer() {}
 
 	public Offer(Long propertyId, String title, String description, BigDecimal discountPercentage, LocalDate startDate, LocalDate endDate, Boolean isActive, LocalDateTime createdAt) {
@@ -66,6 +69,10 @@ public class Offer {
 
 	public LocalDateTime getCreatedAt() { return createdAt; }
 	public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+	/* ----- association accessors ----- */
+	public Property getProperty() { return property; }
+	public void setProperty(Property property) { this.property = property; }
 
 	@Override
 	public String toString() {

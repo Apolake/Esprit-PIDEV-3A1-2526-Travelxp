@@ -1,14 +1,21 @@
 package com.travelxp.controllers;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.travelxp.models.Property;
+import com.travelxp.models.WeatherDTO;
 import com.travelxp.services.PropertyService;
+import com.travelxp.services.RecommendationService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -16,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class PropertyController {
 
@@ -47,7 +55,23 @@ public class PropertyController {
 	@FXML private TextField maxGuestsField;
 	@FXML private TextField priceField;
 	@FXML private TextField imagesField;
+	@FXML private TextField latitudeField;
+	@FXML private TextField longitudeField;
 	@FXML private CheckBox isActiveCheck;
+
+	/* weather display labels */
+	@FXML private javafx.scene.control.Label weatherLabel;
+	@FXML private javafx.scene.control.Label tempLabel;
+	@FXML private javafx.scene.control.Label humidityLabel;
+	@FXML private javafx.scene.control.Label windLabel;
+
+	/* filter/search controls */
+	@FXML private TextField searchField;
+	@FXML private TextField filterCityField;
+	@FXML private TextField minPriceField;
+	@FXML private TextField maxPriceField;
+	@FXML private CheckBox activeOnlyCheck;
+	@FXML private javafx.scene.control.ComboBox<String> sortCombo;
 
 	private final PropertyService propertyService = new PropertyService();
 	private final ObservableList<Property> propertyData = FXCollections.observableArrayList();
@@ -72,6 +96,7 @@ public class PropertyController {
 		propertyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, selected) -> {
 			if (selected != null) {
 				populateForm(selected);
+				fetchAndDisplayWeather(selected);
 			}
 		});
 
@@ -94,17 +119,18 @@ public class PropertyController {
 			BigDecimal price = parseRequiredBigDecimal(priceField.getText(), "Price Per Night");
 			String images = imagesField.getText();
 			Boolean isActive = isActiveCheck.isSelected();
+			Double latitude = parseOptionalDouble(latitudeField.getText(), "Latitude");
+			Double longitude = parseOptionalDouble(longitudeField.getText(), "Longitude");
 
 			Property property = new Property(ownerId, title, description, propertyType, address, city, country, bedrooms, bathrooms, maxGuests, price, images, isActive);
-			propertyService.addProperty(property);
+			property.setLatitude(latitude);
+			property.setLongitude(longitude);
 
 			loadProperties();
 			clearForm();
 			showAlert(Alert.AlertType.INFORMATION, "Success", "Property Created", "Property added successfully.");
 		} catch (IllegalArgumentException e) {
 			showAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Input", e.getMessage());
-		} catch (SQLException e) {
-			showAlert(Alert.AlertType.ERROR, "Database Error", "Create Failed", e.getMessage());
 		}
 	}
 
@@ -129,8 +155,12 @@ public class PropertyController {
 			BigDecimal price = parseRequiredBigDecimal(priceField.getText(), "Price Per Night");
 			String images = imagesField.getText();
 			Boolean isActive = isActiveCheck.isSelected();
+			Double latitude = parseOptionalDouble(latitudeField.getText(), "Latitude");
+			Double longitude = parseOptionalDouble(longitudeField.getText(), "Longitude");
 
 			Property updated = new Property(selected.getId(), ownerId, title, description, propertyType, address, city, country, bedrooms, bathrooms, maxGuests, price, images, isActive);
+			updated.setLatitude(latitude);
+			updated.setLongitude(longitude);
 			propertyService.updateProperty(updated);
 			loadProperties();
 			showAlert(Alert.AlertType.INFORMATION, "Success", "Property Updated", "Property updated successfully.");
@@ -138,15 +168,6 @@ public class PropertyController {
 			showAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Input", e.getMessage());
 		} catch (SQLException e) {
 			showAlert(Alert.AlertType.ERROR, "Database Error", "Update Failed", e.getMessage());
-		}
-	}
-
-	@FXML
-	private void handleDeleteProperty() {
-		Property selected = propertyTable.getSelectionModel().getSelectedItem();
-		if (selected == null) {
-			showAlert(Alert.AlertType.WARNING, "No Selection", "Delete Failed", "Please select a property first.");
-			return;
 		}
 
 		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -178,13 +199,130 @@ public class PropertyController {
 		loadProperties();
 	}
 
+	@FXML
+	private void handleApplyFilters() {
+		try {
+			String keyword = searchField.getText();
+			String city = filterCityField.getText();
+			BigDecimal min = parseOptionalBigDecimal(minPriceField.getText(), "Min Price");
+			BigDecimal max = parseOptionalBigDecimal(maxPriceField.getText(), "Max Price");
+			Boolean active = activeOnlyCheck.isSelected() ? Boolean.TRUE : null;
+			String order = sortCombo.getValue();
+			boolean asc = true; // could add toggle later
+			
+			propertyData.setAll(propertyService.findProperties(keyword, city, min, max, active, order, asc));
+			propertyTable.setItems(propertyData);
+		} catch (SQLException e) {
+			showAlert(Alert.AlertType.ERROR, "Database Error", "Filter failed", e.getMessage());
+		} catch (IllegalArgumentException e) {
+			showAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid filter", e.getMessage());
+		}
+	}
+
+	@FXML
+	private void handleRecommend() {
+		try {
+			// example weights (could be user-configurable)
+			double offerW = 0.25;
+			double priceW = 0.25;
+			double ratingW = 0.25;
+			double distW = 0.25;
+			// use map view center or some fixed point; here reuse previously selected property
+			Property selected = propertyTable.getSelectionModel().getSelectedItem();
+		double lat = selected.getLatitude();
+		double lon = selected.getLongitude();
+			List<Property> rec = new RecommendationService()
+				.rankProperties(lat, lon, offerW, priceW, ratingW, distW);
+			propertyData.setAll(rec);
+			propertyTable.setItems(propertyData);
+		} catch (SQLException e) {
+			showAlert(Alert.AlertType.ERROR, "Recommendation Error", "Unable to compute recommendations", e.getMessage());
+		}
+	}
+
+	@FXML
+	private void handleShowMap() {
+		Property selected = propertyTable.getSelectionModel().getSelectedItem();
+		if (selected == null) {
+			showAlert(Alert.AlertType.WARNING, "No Selection", "Map Failed", "Please select a property first.");
+			return;
+		}
+		if (selected.getLatitude() == null || selected.getLongitude() == null) {
+			showAlert(Alert.AlertType.INFORMATION, "Coordinates Missing", "Cannot show map", "Property does not have latitude/longitude values.");
+			return;
+		}
+
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/property_map.fxml"));
+			Parent root = loader.load();
+			MapController mapCtrl = loader.getController();
+			mapCtrl.initLocation(selected.getLatitude(), selected.getLongitude(), selected.getTitle());
+
+			Stage stage = new Stage();
+			stage.setTitle("Location - " + selected.getTitle());
+			stage.setScene(new Scene(root, 640, 480));
+			stage.show();
+		} catch (IOException e) {
+			showAlert(Alert.AlertType.ERROR, "Map Error", "Unable to open map", e.getMessage());
+		}
+	}
+
 	private void loadProperties() {
 		try {
-			propertyData.setAll(propertyService.getAllProperties());
+			// reuse search method with no criteria
+			propertyData.setAll(propertyService.findProperties(
+					null, null, null, null, null, null, true));
 			propertyTable.setItems(propertyData);
 		} catch (SQLException e) {
 			showAlert(Alert.AlertType.ERROR, "Database Error", "Load Failed", e.getMessage());
 		}
+	}
+
+	/**
+	 * Fetch weather data for the selected property and display it.
+	 * Runs asynchronously to avoid blocking the UI.
+	 */
+	private void fetchAndDisplayWeather(Property property) {
+		if (property.getLatitude() == null || property.getLongitude() == null) {
+			weatherLabel.setText("Weather: No coordinates");
+			tempLabel.setText("");
+			humidityLabel.setText("");
+			windLabel.setText("");
+			return;
+		}
+
+		// fetch weather in background thread
+		new Thread(() -> {
+			try {
+				WeatherDTO weather = new com.travelxp.services.WeatherService()
+						.getWeatherByCoordinates(property.getLatitude(), property.getLongitude());
+
+				// update UI on JavaFX thread
+				javafx.application.Platform.runLater(() -> {
+					weatherLabel.setText(String.format("%s - %s (%s)",
+							weather.getCity(),
+							weather.getCondition(),
+							weather.getDescription()));
+					tempLabel.setText(String.format("Temp: %.1f°C (feels like %.1f°C)",
+							weather.getTemperature(),
+							weather.getFeelsLike()));
+					humidityLabel.setText(String.format("Humidity: %d%%",
+							weather.getHumidity()));
+					windLabel.setText(String.format("Wind: %.1f m/s",
+							weather.getWindSpeed()));
+				});
+			} catch (IllegalStateException e) {
+				javafx.application.Platform.runLater(() ->
+					showAlert(Alert.AlertType.ERROR, "API Configuration",
+							"Weather API not configured", e.getMessage()));
+			} catch (IOException e) {
+				javafx.application.Platform.runLater(() ->
+					showAlert(Alert.AlertType.WARNING, "Weather Error",
+							"Could not fetch weather", e.getMessage()));
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}).start();
 	}
 
 	private void populateForm(Property property) {
@@ -199,6 +337,8 @@ public class PropertyController {
 		bathroomsField.setText(property.getBathrooms() != null ? property.getBathrooms().toString() : "");
 		maxGuestsField.setText(property.getMaxGuests() != null ? property.getMaxGuests().toString() : "");
 		priceField.setText(property.getPricePerNight() != null ? property.getPricePerNight().toString() : "");
+		latitudeField.setText(property.getLatitude() != null ? property.getLatitude().toString() : "");
+		longitudeField.setText(property.getLongitude() != null ? property.getLongitude().toString() : "");
 		imagesField.setText(property.getImages());
 		isActiveCheck.setSelected(Boolean.TRUE.equals(property.getIsActive()));
 	}
@@ -215,6 +355,8 @@ public class PropertyController {
 		bathroomsField.clear();
 		maxGuestsField.clear();
 		priceField.clear();
+		latitudeField.clear();
+		longitudeField.clear();
 		imagesField.clear();
 		isActiveCheck.setSelected(true);
 		propertyTable.getSelectionModel().clearSelection();
@@ -225,7 +367,7 @@ public class PropertyController {
 			throw new IllegalArgumentException(fieldName + " is required.");
 		}
 		try {
-			return Long.parseLong(value.trim());
+			return Long.parseLong(value);
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(fieldName + " must be a valid number.");
 		}
@@ -236,9 +378,31 @@ public class PropertyController {
 			throw new IllegalArgumentException(fieldName + " is required.");
 		}
 		try {
-			return Integer.parseInt(value.trim());
+			return Integer.parseInt(value);
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException(fieldName + " must be a valid number.");
+		}
+	}
+
+	private Double parseOptionalDouble(String value, String fieldName) {
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+		try {
+			return Double.parseDouble(value);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(fieldName + " must be a valid decimal number.");
+		}
+	}
+
+	private BigDecimal parseOptionalBigDecimal(String value, String fieldName) {
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+		try {
+			return new BigDecimal(value.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(fieldName + " must be a valid decimal number.");
 		}
 	}
 

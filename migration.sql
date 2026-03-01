@@ -5,3 +5,9 @@ CREATE TABLE IF NOT EXISTS gamification (
     title VARCHAR(50) DEFAULT 'Novice',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- add geographic columns to property table for map display
+ALTER TABLE property
+    ADD COLUMN latitude DOUBLE NULL,
+    ADD COLUMN longitude DOUBLE NULL,
+    ADD COLUMN rating DOUBLE NULL;

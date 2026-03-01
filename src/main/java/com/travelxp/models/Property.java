@@ -1,6 +1,8 @@
 package com.travelxp.models;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Property {
 	private Long id;
@@ -13,10 +15,19 @@ public class Property {
 	private String country;
 	private Integer bedrooms;
 	private Integer bathrooms;
+
+	/* geographic coordinates */
+	private Double latitude;
+	private Double longitude;
+	/* average user rating (0..5) */
+	private Double rating;
 	private Integer maxGuests;
 	private BigDecimal pricePerNight;
 	private String images;
 	private Boolean isActive;
+
+	/* one-to-many: a property may have multiple offers */
+	private List<Offer> offers = new ArrayList<>();
 
 	public Property() {}
 
@@ -94,6 +105,19 @@ public class Property {
 
 	public Boolean getIsActive() { return isActive; }
 	public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+	public Double getLatitude() { return latitude; }
+	public void setLatitude(Double latitude) { this.latitude = latitude; }
+
+	public Double getLongitude() { return longitude; }
+	public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+	public Double getRating() { return rating; }
+	public void setRating(Double rating) { this.rating = rating; }
+
+	/* ----- association accessors ----- */
+	public List<Offer> getOffers() { return offers; }
+	public void setOffers(List<Offer> offers) { this.offers = offers; }
 
 	@Override
 	public String toString() {
