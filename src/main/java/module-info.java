@@ -13,6 +13,7 @@ module com.travelxp {
     requires stripe.java;
     requires com.google.gson;
     requires jdk.httpserver;
+    requires java.net.http;
 
     opens com.travelxp to javafx.graphics, javafx.fxml;
     opens com.travelxp.controllers to javafx.fxml;

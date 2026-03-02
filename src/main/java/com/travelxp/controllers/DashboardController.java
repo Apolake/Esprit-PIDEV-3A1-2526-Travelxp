@@ -422,6 +422,7 @@ public class DashboardController {
     @FXML private void handleEditProfile(ActionEvent event) { changeScene(event, "/com/travelxp/views/edit_profile.fxml"); }
     @FXML private void handleChangePassword(ActionEvent event) { changeScene(event, "/com/travelxp/views/change_password.fxml"); }
     @FXML private void handleFeedback(ActionEvent event) { changeScene(event, "/com/travelxp/views/feedback-view.fxml"); }
+    @FXML private void handleGeminiChat(ActionEvent event) { changeScene(event, "/com/travelxp/views/gemini-chat.fxml"); }
 
     @FXML
     private void handleBrowseProperties(ActionEvent event) {

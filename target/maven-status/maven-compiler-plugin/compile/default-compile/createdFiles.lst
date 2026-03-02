@@ -36,12 +36,14 @@ com\travelxp\services\UserService.class
 com\travelxp\utils\ThemeManager.class
 com\travelxp\repositories\UserRepository.class
 com\travelxp\controllers\ModerationController$2.class
+com\travelxp\controllers\GeminiChatController.class
 com\travelxp\models\Service.class
 com\travelxp\models\Gamification.class
 com\travelxp\models\TripMilestone.class
 com\travelxp\services\TotpService.class
 com\travelxp\controllers\BookingController.class
 com\travelxp\repositories\TripMilestoneRepository.class
+com\travelxp\services\GeminiService.class
 com\travelxp\controllers\OfferController$1.class
 com\travelxp\utils\MyDB.class
 com\travelxp\controllers\ModerationController$1.class

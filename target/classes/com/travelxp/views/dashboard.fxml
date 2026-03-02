@@ -107,6 +107,15 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button onAction="#handleGeminiChat" maxWidth="Infinity" styleClass="nav-button, flat" text="AI Assistant">
+                     <graphic>
+                        <ImageView fitHeight="20" fitWidth="20">
+                           <image>
+                              <Image url="@../../../icons/icons8-services-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
             

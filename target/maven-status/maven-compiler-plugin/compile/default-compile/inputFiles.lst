@@ -6,6 +6,7 @@ C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\DashboardController.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\EditProfileController.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\FeedbackController.java
+C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\GeminiChatController.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\LoginController.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ModerationController.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\OfferController.java
@@ -39,6 +40,7 @@ C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\FaceRecognitionService.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\FeedbackService.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\GamificationService.java
+C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\GeminiService.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\OfferService.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\PropertyService.java
 C:\Users\otaku\Desktop\New folder (2)\ProjectJavaFx3A1\ProjectJavaFx3A1\src\main\java\com\travelxp\services\ServiceService.java
