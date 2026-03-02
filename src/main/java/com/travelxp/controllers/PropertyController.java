@@ -344,7 +344,12 @@ public class PropertyController {
         bookBtn.setMaxWidth(Double.MAX_VALUE);
         bookBtn.setOnAction(e -> handleBook(p));
 
-        card.getChildren().addAll(badge, imageContainer, title, loc, price, offerTitle, bookBtn);
+        Button mapBtn = new Button("View on Map");
+        mapBtn.getStyleClass().add("flat");
+        mapBtn.setMaxWidth(Double.MAX_VALUE);
+        mapBtn.setOnAction(e -> openPropertyOnMap(p));
+
+        card.getChildren().addAll(badge, imageContainer, title, loc, price, offerTitle, bookBtn, mapBtn);
         return card;
     }
 
@@ -485,6 +490,39 @@ public class PropertyController {
                 property.setLatitude(result.getLatitude());
                 property.setLongitude(result.getLongitude());
             }
+        }
+    }
+
+    /**
+     * Opens the property location on OpenStreetMap in the system browser.
+     * Falls back to geocoding the address if lat/lng are not stored.
+     */
+    private void openPropertyOnMap(Property p) {
+        double lat, lon;
+        if (p.getLatitude() != null && p.getLongitude() != null) {
+            lat = p.getLatitude();
+            lon = p.getLongitude();
+        } else {
+            String addr = (p.getAddress() != null ? p.getAddress() + ", " : "") + p.getCity() + ", " + p.getCountry();
+            NominatimGeocodingService.GeocodingResult geo = geocodingService.geocode(addr);
+            if (geo == null) {
+                showAlert(Alert.AlertType.WARNING, "Location Error", "Not Found",
+                        "Could not determine the property location.");
+                return;
+            }
+            lat = geo.getLatitude();
+            lon = geo.getLongitude();
+        }
+        String url = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=16/" + lat + "/" + lon;
+        try {
+            if (java.awt.Desktop.isDesktopSupported()
+                    && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Browser Error",
+                    "Failed to open browser: " + ex.getMessage());
         }
     }
 
@@ -753,11 +791,16 @@ public class PropertyController {
         bookBtn.setMaxWidth(Double.MAX_VALUE);
         bookBtn.setOnAction(e -> handleBook(p));
 
+        Button mapBtn = new Button("View on Map");
+        mapBtn.getStyleClass().add("flat");
+        mapBtn.setMaxWidth(Double.MAX_VALUE);
+        mapBtn.setOnAction(e -> openPropertyOnMap(p));
+
         info.getChildren().addAll(title, loc, price);
         if (p.getLatitude() != null && p.getLongitude() != null) {
             info.getChildren().add(coordLabel);
         }
-        info.getChildren().add(bookBtn);
+        info.getChildren().addAll(bookBtn, mapBtn);
         card.getChildren().addAll(imageContainer, info);
         return card;
     }

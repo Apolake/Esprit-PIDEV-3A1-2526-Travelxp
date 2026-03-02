@@ -9,10 +9,12 @@ import java.util.Random;
 
 import com.travelxp.Main;
 import com.travelxp.models.Gamification;
+import com.travelxp.models.Offer;
 import com.travelxp.models.Property;
 import com.travelxp.models.Trip;
 import com.travelxp.models.User;
 import com.travelxp.services.GamificationService;
+import com.travelxp.services.PropertyRecommendationService;
 import com.travelxp.services.PropertyService;
 import com.travelxp.services.StripeService;
 import com.travelxp.services.TripService;
@@ -65,12 +67,15 @@ public class DashboardController {
     @FXML private ScrollPane propertyScrollPane;
     @FXML private TilePane tripShowcase;
     @FXML private ScrollPane tripScrollPane;
+    @FXML private VBox recommendedSection;
+    @FXML private HBox recommendedContainer;
 
     private final UserService userService = new UserService();
     private final GamificationService gamificationService = new GamificationService();
     private final PropertyService propertyService = new PropertyService();
     private final TripService tripService = new TripService();
     private final StripeService stripeService = new StripeService();
+    private final PropertyRecommendationService recommendationService = new PropertyRecommendationService();
     private final Random random = new Random();
 
     @FXML
@@ -85,9 +90,140 @@ public class DashboardController {
             updateGamificationUI(user.getId());
         }
 
+        loadRecommendedDeals();
         loadPropertyShowcase();
         loadTripShowcase();
         Platform.runLater(this::startBackgroundAnimation);
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // Recommended Deals – properties with 30 %+ active offers
+    // ═══════════════════════════════════════════════════════
+
+    private void loadRecommendedDeals() {
+        if (recommendedContainer == null) return;
+        recommendedContainer.getChildren().clear();
+        try {
+            java.util.Map<Property, Offer> recs = recommendationService.getRecommendationsWithOffers();
+            if (recs.isEmpty()) {
+                if (recommendedSection != null) {
+                    recommendedSection.setVisible(false);
+                    recommendedSection.setManaged(false);
+                }
+                return;
+            }
+            if (recommendedSection != null) {
+                recommendedSection.setVisible(true);
+                recommendedSection.setManaged(true);
+            }
+            for (java.util.Map.Entry<Property, Offer> entry : recs.entrySet()) {
+                recommendedContainer.getChildren().add(
+                    createRecommendedCard(entry.getKey(), entry.getValue())
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (recommendedSection != null) {
+                recommendedSection.setVisible(false);
+                recommendedSection.setManaged(false);
+            }
+        }
+    }
+
+    private VBox createRecommendedCard(Property p, Offer offer) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("card");
+        card.setPrefWidth(280);
+        card.setMinWidth(280);
+        card.setPadding(new Insets(12));
+        card.setAlignment(javafx.geometry.Pos.TOP_CENTER);
+        card.setStyle("-fx-border-color: #D4AF37; -fx-border-width: 2; -fx-border-radius: 8;");
+
+        Label badge = new Label(offer.getDiscountPercentage().intValue() + "% OFF");
+        badge.setStyle("-fx-background-color: #D4AF37; -fx-text-fill: white; -fx-padding: 4 12; "
+                + "-fx-font-weight: bold; -fx-background-radius: 12;");
+
+        StackPane imageContainer = new StackPane();
+        imageContainer.setPrefHeight(140);
+        imageContainer.getStyleClass().add("showcase-image-container");
+        ImageView iv = new ImageView();
+        iv.setFitHeight(140);
+        iv.setFitWidth(250);
+        iv.setPreserveRatio(true);
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(250, 140);
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        imageContainer.setClip(clip);
+        if (p.getImages() != null && !p.getImages().isEmpty()) {
+            File imgFile = new File(p.getImages());
+            if (imgFile.exists()) {
+                iv.setImage(new Image(imgFile.toURI().toString(), true));
+            }
+        }
+        imageContainer.getChildren().add(iv);
+
+        Label title = new Label(p.getTitle());
+        title.getStyleClass().add("title-4");
+        title.setStyle("-fx-font-size: 15px;");
+
+        Label loc = new Label(p.getCity() + ", " + p.getCountry());
+        loc.getStyleClass().add("text-muted");
+
+        Label price = new Label("$" + p.getPricePerNight() + " / night");
+        price.setStyle("-fx-font-weight: bold;");
+
+        Label offerTitle = new Label(offer.getTitle());
+        offerTitle.setStyle("-fx-text-fill: #D4AF37; -fx-font-style: italic;");
+
+        HBox buttons = new HBox(8);
+        buttons.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Button bookBtn = new Button("Book Deal");
+        bookBtn.getStyleClass().add("accent");
+        bookBtn.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(bookBtn, Priority.ALWAYS);
+        bookBtn.setOnAction(e -> handleBrowseProperties(e));
+
+        Button mapBtn = new Button("View on Map");
+        mapBtn.getStyleClass().add("flat");
+        mapBtn.setOnAction(e -> openPropertyOnMap(p));
+
+        buttons.getChildren().addAll(bookBtn, mapBtn);
+
+        card.getChildren().addAll(badge, imageContainer, title, loc, price, offerTitle, buttons);
+        return card;
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // View on Map – opens OpenStreetMap in the system browser
+    // ═══════════════════════════════════════════════════════
+
+    private void openPropertyOnMap(Property p) {
+        double lat, lon;
+        if (p.getLatitude() != null && p.getLongitude() != null) {
+            lat = p.getLatitude();
+            lon = p.getLongitude();
+        } else {
+            // Fall back to geocoding the address on-the-fly
+            com.travelxp.services.NominatimGeocodingService geocoder = new com.travelxp.services.NominatimGeocodingService();
+            String addr = (p.getAddress() != null ? p.getAddress() + ", " : "") + p.getCity() + ", " + p.getCountry();
+            com.travelxp.services.NominatimGeocodingService.GeocodingResult geo = geocoder.geocode(addr);
+            if (geo == null) {
+                new Alert(Alert.AlertType.WARNING, "Could not determine the property location.").show();
+                return;
+            }
+            lat = geo.getLatitude();
+            lon = geo.getLongitude();
+        }
+        String url = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=16/" + lat + "/" + lon;
+        try {
+            if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to open browser: " + ex.getMessage()).show();
+        }
     }
 
     private void loadPropertyShowcase() {
@@ -186,7 +322,13 @@ public class DashboardController {
         viewBtn.setPrefHeight(35);
         viewBtn.setOnAction(e -> handleBrowseProperties(e));
 
-        infoBox.getChildren().addAll(topInfo, viewBtn);
+        Button mapBtn = new Button("View on Map");
+        mapBtn.getStyleClass().add("flat");
+        mapBtn.setMaxWidth(Double.MAX_VALUE);
+        mapBtn.setPrefHeight(35);
+        mapBtn.setOnAction(e -> openPropertyOnMap(p));
+
+        infoBox.getChildren().addAll(topInfo, viewBtn, mapBtn);
         
         card.getChildren().addAll(imageContainer, infoBox);
         return card;

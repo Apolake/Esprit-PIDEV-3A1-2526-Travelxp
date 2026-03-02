@@ -243,6 +243,22 @@
                            </children>
                         </FlowPane>
                         
+                        <!-- Recommended Deals Section -->
+                        <VBox fx:id="recommendedSection" spacing="15">
+                           <children>
+                              <Label text="Recommended Deals (30%+ Off)" styleClass="title-2" />
+                              <ScrollPane fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" styleClass="edge-to-edge" prefHeight="310">
+                                 <content>
+                                    <HBox fx:id="recommendedContainer" spacing="20">
+                                       <padding>
+                                          <Insets top="5" right="5" bottom="5" left="5" />
+                                       </padding>
+                                    </HBox>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+
                         <!-- Property Showcase -->
                         <VBox spacing="20">
                            <children>
