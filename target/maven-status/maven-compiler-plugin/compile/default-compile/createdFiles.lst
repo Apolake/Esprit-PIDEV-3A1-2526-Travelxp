@@ -49,6 +49,7 @@ com\travelxp\controllers\ActivityController.class
 com\travelxp\services\FeedbackService.class
 com\travelxp\services\FaceRecognitionService.class
 com\travelxp\services\ServiceService.class
+com\travelxp\services\StripeService.class
 com\travelxp\models\Comment.class
 com\travelxp\repositories\ActivityRepository.class
 com\travelxp\Main.class

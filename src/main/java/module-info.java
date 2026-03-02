@@ -10,6 +10,9 @@ module com.travelxp {
     requires org.bytedeco.opencv;
     requires com.google.zxing;
     requires com.google.zxing.javase;
+    requires stripe.java;
+    requires com.google.gson;
+    requires jdk.httpserver;
 
     opens com.travelxp to javafx.graphics, javafx.fxml;
     opens com.travelxp.controllers to javafx.fxml;

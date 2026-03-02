@@ -1,5 +1,12 @@
 package com.travelxp.controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Random;
+
 import com.travelxp.Main;
 import com.travelxp.models.Gamification;
 import com.travelxp.models.Property;
@@ -7,8 +14,10 @@ import com.travelxp.models.Trip;
 import com.travelxp.models.User;
 import com.travelxp.services.GamificationService;
 import com.travelxp.services.PropertyService;
+import com.travelxp.services.StripeService;
 import com.travelxp.services.TripService;
 import com.travelxp.services.UserService;
+
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -18,7 +27,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -31,13 +46,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Random;
 
 public class DashboardController {
 
@@ -62,6 +70,7 @@ public class DashboardController {
     private final GamificationService gamificationService = new GamificationService();
     private final PropertyService propertyService = new PropertyService();
     private final TripService tripService = new TripService();
+    private final StripeService stripeService = new StripeService();
     private final Random random = new Random();
 
     @FXML
@@ -289,6 +298,66 @@ public class DashboardController {
 
     @FXML
     private void handleRecharge(ActionEvent event) {
+        if (!stripeService.isConfigured()) {
+            // Stripe not configured — fall back to direct balance credit
+            rechargeWithoutStripe();
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog("50.00");
+        dialog.setTitle("Recharge Balance");
+        dialog.setHeaderText("Add funds to your account via Stripe.");
+        dialog.setContentText("Amount ($):");
+
+        dialog.showAndWait().ifPresent(amountStr -> {
+            try {
+                double amount = Double.parseDouble(amountStr);
+                if (amount <= 0) throw new NumberFormatException();
+
+                String email = Main.getSession().getUser().getEmail();
+
+                // Show a waiting indicator
+                Alert waitAlert = new Alert(Alert.AlertType.INFORMATION);
+                waitAlert.setTitle("Stripe Payment");
+                waitAlert.setHeaderText("A payment page has been opened in your browser.");
+                waitAlert.setContentText("Complete the payment in your browser.\nThis dialog will close automatically when done.");
+                waitAlert.getButtonTypes().setAll(ButtonType.CANCEL);
+                waitAlert.show();
+
+                stripeService.createCheckoutAndWaitForPayment(amount, email)
+                        .thenAccept(success -> Platform.runLater(() -> {
+                            waitAlert.close();
+                            if (success) {
+                                try {
+                                    int userId = Main.getSession().getUser().getId();
+                                    if (userService.updateBalance(userId, amount)) {
+                                        Main.getSession().setUser(userService.getUserById(userId));
+                                        updateProfileUI(Main.getSession().getUser());
+                                        Alert ok = new Alert(Alert.AlertType.INFORMATION,
+                                                "Payment successful! $" + String.format("%.2f", amount) + " has been added to your balance.");
+                                        ok.show();
+                                    }
+                                } catch (SQLException ex) {
+                                    new Alert(Alert.AlertType.ERROR, "Payment succeeded but failed to update balance. Contact support.").show();
+                                    ex.printStackTrace();
+                                }
+                            } else {
+                                new Alert(Alert.AlertType.WARNING, "Payment was cancelled or timed out.").show();
+                            }
+                        }));
+
+                // If user clicks Cancel on the wait dialog, the CompletableFuture will still
+                // resolve eventually (success or timeout), but we won’t bother them again.
+                waitAlert.setOnCloseRequest(e -> waitAlert.close());
+
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR, "Please enter a valid positive amount.").show();
+            }
+        });
+    }
+
+    /** Fallback recharge when Stripe is not configured (no API key in db.properties). */
+    private void rechargeWithoutStripe() {
         TextInputDialog dialog = new TextInputDialog("50.00");
         dialog.setTitle("Recharge Balance");
         dialog.setHeaderText("Add funds to your account.");
@@ -298,17 +367,15 @@ public class DashboardController {
             try {
                 double amount = Double.parseDouble(amountStr);
                 if (amount <= 0) throw new NumberFormatException();
-                
+
                 int userId = Main.getSession().getUser().getId();
                 if (userService.updateBalance(userId, amount)) {
                     Main.getSession().setUser(userService.getUserById(userId));
                     updateProfileUI(Main.getSession().getUser());
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Success! Your balance has been updated.");
-                    alert.show();
+                    new Alert(Alert.AlertType.INFORMATION, "Success! Your balance has been updated.").show();
                 }
             } catch (NumberFormatException | SQLException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid amount or system error.");
-                alert.show();
+                new Alert(Alert.AlertType.ERROR, "Invalid amount or system error.").show();
             }
         });
     }
