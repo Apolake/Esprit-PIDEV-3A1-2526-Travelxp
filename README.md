@@ -9,11 +9,22 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Java-25-orange?logo=openjdk" alt="Java 25"/>
-  <img src="https://img.shields.io/badge/JavaFX-25-blue?logo=java" alt="JavaFX 25"/>
-  <img src="https://img.shields.io/badge/Maven-3.x-C71A36?logo=apachemaven" alt="Maven"/>
+  <img src="https://img.shields.io/badge/Java-25-orange?logo=openjdk&logoColor=white" alt="Java 25"/>
+  <img src="https://img.shields.io/badge/JavaFX-25-blue?logo=java&logoColor=white" alt="JavaFX 25"/>
+  <img src="https://img.shields.io/badge/Maven-3.x-C71A36?logo=apachemaven&logoColor=white" alt="Maven"/>
   <img src="https://img.shields.io/badge/MySQL-8.x-4479A1?logo=mysql&logoColor=white" alt="MySQL"/>
+  <img src="https://img.shields.io/badge/Stripe-Payments-635BFF?logo=stripe&logoColor=white" alt="Stripe"/>
+  <img src="https://img.shields.io/badge/Gemini_AI-2.5_Flash-4285F4?logo=googlegemini&logoColor=white" alt="Gemini AI"/>
+  <img src="https://img.shields.io/badge/OpenCV-Face_ID-5C3EE8?logo=opencv&logoColor=white" alt="OpenCV"/>
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Controllers-20-blueviolet" alt="20 Controllers"/>
+  <img src="https://img.shields.io/badge/Services-24-ff69b4" alt="24 Services"/>
+  <img src="https://img.shields.io/badge/Models-14-yellow" alt="14 Models"/>
+  <img src="https://img.shields.io/badge/Repositories-8-cyan" alt="8 Repositories"/>
+  <img src="https://img.shields.io/badge/APIs-7_Integrated-success" alt="7 APIs"/>
 </p>
 
 ---
@@ -21,6 +32,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [Highlights at a Glance](#highlights-at-a-glance)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
@@ -33,6 +45,7 @@
 - [Database](#database)
 - [Screenshots](#screenshots)
 - [Contributors](#contributors)
+- [Quick Start Cheat Sheet](#quick-start-cheat-sheet)
 
 ---
 
@@ -41,6 +54,65 @@
 **TravelXP** is a comprehensive desktop travel management application built with **JavaFX** and **Maven**. It provides a complete ecosystem for travelers to discover accommodations, plan multi-destination trips, manage bookings with dynamic pricing, and interact with an AI-powered assistant — all within a modern, themeable UI.
 
 The platform supports two roles — **User** and **Admin** — each with tailored dashboards and capabilities.
+
+---
+
+## Highlights at a Glance
+
+<table>
+<tr>
+<td align="center" width="25%">
+
+### 🔐 3-Layer Auth
+Password + Face ID + TOTP 2FA
+
+</td>
+<td align="center" width="25%">
+
+### 🤖 AI Assistant
+Gemini 2.5 Flash Chatbot
+
+</td>
+<td align="center" width="25%">
+
+### 💰 Smart Pricing
+Season · Demand · Discounts
+
+</td>
+<td align="center" width="25%">
+
+### 🏆 Gamification
+XP · Levels · 12+ Titles
+
+</td>
+</tr>
+<tr>
+<td align="center" width="25%">
+
+### 🗺️ Geolocation
+Geocoding + Route Planning
+
+</td>
+<td align="center" width="25%">
+
+### 💳 Stripe Payments
+Checkout + Wallet System
+
+</td>
+<td align="center" width="25%">
+
+### 🌍 Multi-language
+Auto-detect & Translate 10 langs
+
+</td>
+<td align="center" width="25%">
+
+### 🎨 Themes
+Dark / Light with smooth transitions
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -118,22 +190,23 @@ The platform supports two roles — **User** and **Admin** — each with tailore
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Language** | Java 25 |
-| **UI Framework** | JavaFX 25 + FXML |
-| **UI Theme** | AtlantaFX 2.0.1 |
-| **Build Tool** | Apache Maven |
-| **Database** | MySQL 8.x |
-| **DB Connector** | MySQL Connector/J 8.3.0 |
-| **Authentication** | jBCrypt 0.4, OpenCV/JavaCV 1.5.10, ZXing 3.5.3 |
-| **Payments** | Stripe Java SDK 24.18.0 |
-| **AI** | Google Gemini 2.5 Flash (REST) |
-| **Email** | JavaMail (javax.mail 1.6.2) |
-| **JSON** | org.json, Gson 2.10.1 |
-| **PDF** | iTextPDF |
-| **SMS** | Twilio |
-| **HTTP** | java.net.http, OkHttp |
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Version</th></tr>
+<tr><td>☕ <b>Language</b></td><td>Java</td><td>25</td></tr>
+<tr><td>🖼️ <b>UI Framework</b></td><td>JavaFX + FXML</td><td>25</td></tr>
+<tr><td>🎨 <b>UI Theme</b></td><td>AtlantaFX</td><td>2.0.1</td></tr>
+<tr><td>🔧 <b>Build Tool</b></td><td>Apache Maven</td><td>3.x</td></tr>
+<tr><td>🗄️ <b>Database</b></td><td>MySQL</td><td>8.x</td></tr>
+<tr><td>🔌 <b>DB Connector</b></td><td>MySQL Connector/J</td><td>8.3.0</td></tr>
+<tr><td>🔐 <b>Authentication</b></td><td>jBCrypt, OpenCV/JavaCV, ZXing</td><td>0.4 · 1.5.10 · 3.5.3</td></tr>
+<tr><td>💳 <b>Payments</b></td><td>Stripe Java SDK</td><td>24.18.0</td></tr>
+<tr><td>🤖 <b>AI</b></td><td>Google Gemini 2.5 Flash</td><td>REST API</td></tr>
+<tr><td>📧 <b>Email</b></td><td>JavaMail (javax.mail)</td><td>1.6.2</td></tr>
+<tr><td>📋 <b>JSON</b></td><td>org.json, Gson</td><td>20231013 · 2.10.1</td></tr>
+<tr><td>📄 <b>PDF</b></td><td>iTextPDF</td><td>—</td></tr>
+<tr><td>📱 <b>SMS</b></td><td>Twilio</td><td>—</td></tr>
+<tr><td>🌐 <b>HTTP</b></td><td>java.net.http, OkHttp</td><td>—</td></tr>
+</table>
 
 ---
 
@@ -157,6 +230,168 @@ com.travelxp
 - **MVC** — Model-View-Controller via JavaFX + FXML
 - **Singleton** — database connection (`MyDB`), user session (`UserSession`)
 - **Strategy** — dynamic pricing and cancellation policy engines
+
+### Application Flow
+
+```mermaid
+flowchart LR
+    A[🚀 Launch App] --> B{Authenticate}
+    B -->|Password| C[Login]
+    B -->|Face ID| C
+    B -->|New User| D[Register]
+    D --> C
+    C --> E[🏠 Dashboard]
+    E --> F[🗺️ Trips]
+    E --> G[🏡 Properties]
+    E --> H[🤖 AI Chat]
+    E --> I[👤 Profile]
+    F --> J[📋 Activities]
+    G --> K[📅 Booking]
+    K --> L{Payment}
+    L -->|Wallet| M[✅ Confirmed]
+    L -->|Stripe| M
+    M --> N[📧 Email Sent]
+    J --> O[⭐ Earn XP]
+    O --> P[🏆 Level Up!]
+```
+
+### Authentication Flow
+
+```mermaid
+flowchart TD
+    Start([User Opens App]) --> Login[Login Screen]
+    Login --> Cred{Auth Method?}
+    Cred -->|Email + Password| Verify[Verify BCrypt Hash]
+    Cred -->|Face ID| Cam[📷 Webcam Capture]
+    Cam --> LBPH[LBPH Recognition]
+    LBPH -->|Confidence ≥ 85| TwoFA
+    LBPH -->|Confidence < 85| Fail[❌ Not Recognized]
+    Verify -->|Valid| TwoFA{TOTP Enabled?}
+    Verify -->|Invalid| Fail2[❌ Wrong Credentials]
+    TwoFA -->|Yes| TOTP[Enter 6-digit Code]
+    TwoFA -->|No| Success
+    TOTP -->|Valid ±1 window| Success[✅ Dashboard]
+    TOTP -->|Invalid| Fail3[❌ Invalid Code]
+
+    style Success fill:#22c55e,color:#fff
+    style Fail fill:#ef4444,color:#fff
+    style Fail2 fill:#ef4444,color:#fff
+    style Fail3 fill:#ef4444,color:#fff
+```
+
+### Dynamic Pricing Engine
+
+```mermaid
+flowchart TD
+    Base["💲 Base Price / Night"] --> Season{Season?}
+    Season -->|Jun-Aug| Peak["×1.30 Peak Summer"]
+    Season -->|Dec-Jan| Winter["×1.25 Winter Holiday"]
+    Season -->|Mar-May, Sep| Shoulder["×1.10 Shoulder"]
+    Season -->|Other| Off["×0.90 Off-Peak"]
+    
+    Peak & Winter & Shoulder & Off --> Demand{Demand Level?}
+    Demand -->|≥10 bookings| High["×1.20 High Demand"]
+    Demand -->|≥5 bookings| Med["×1.10 Medium Demand"]
+    Demand -->|< 5| Normal["×1.00 Normal"]
+    
+    High & Med & Normal --> Guests{Extra Guests?}
+    Guests -->|> 2 guests| Extra["+$15/night per extra"]
+    Guests -->|≤ 2| NoExtra[No surcharge]
+    
+    Extra & NoExtra --> Stay{Stay Length?}
+    Stay -->|28+ nights| Monthly["-20% Monthly"]
+    Stay -->|7+ nights| Weekly["-10% Weekly"]
+    Stay -->|< 7| NoDisc[No discount]
+    
+    Monthly & Weekly & NoDisc --> Total["🧾 Final Price + Services"]
+
+    style Total fill:#22c55e,color:#fff,stroke:#16a34a
+    style Base fill:#3b82f6,color:#fff
+```
+
+### Entity Relationship Overview
+
+```mermaid
+erDiagram
+    USER ||--o{ TRIP : creates
+    USER ||--o{ BOOKING : makes
+    USER ||--o{ FEEDBACK : writes
+    USER ||--o{ MESSAGE : sends
+    USER ||--o{ GAMIFICATION : earns
+    
+    TRIP ||--o{ ACTIVITY : contains
+    TRIP ||--o{ TRIP_MILESTONE : tracks
+    TRIP ||--o{ BOOKING : "linked to"
+    
+    PROPERTY ||--o{ BOOKING : "booked at"
+    PROPERTY ||--o{ OFFER : has
+    
+    BOOKING }o--o{ SERVICE : includes
+    
+    FEEDBACK ||--o{ COMMENT : receives
+    
+    CONVERSATION ||--o{ MESSAGE : contains
+    USER ||--o{ CONVERSATION : participates
+
+    USER {
+        int id PK
+        string username
+        string email
+        string password_hash
+        string role
+        float balance
+        int xp
+        boolean totp_enabled
+    }
+    TRIP {
+        int id PK
+        string name
+        string origin
+        string destination
+        date start_date
+        date end_date
+        float budget
+        string status
+    }
+    PROPERTY {
+        int id PK
+        string title
+        string city
+        string country
+        float price_per_night
+        float latitude
+        float longitude
+    }
+    BOOKING {
+        int id PK
+        date booking_date
+        int duration
+        float total_price
+        string status
+        int num_guests
+    }
+```
+
+### Gamification Progression
+
+```mermaid
+gantt
+    title XP Level Progression
+    dateFormat X
+    axisFormat %s XP
+
+    section Levels
+    L1 Novice           :done, 0, 50
+    L2 Explorer          :done, 50, 120
+    L3 Traveler          :active, 120, 200
+    L4 Globetrotter      :200, 300
+    L5 Adventurer        :300, 400
+    L6 Voyager           :400, 500
+    L7 Wanderer          :500, 600
+    L8 Nomad             :600, 700
+    L9 Pioneer           :700, 800
+    L10 Trailblazer      :800, 900
+```
 
 ---
 
@@ -226,6 +461,31 @@ mail.from=your_email@gmail.com
 ---
 
 ## Usage
+
+```mermaid
+journey
+    title User Journey in TravelXP
+    section Getting Started
+      Register an account: 5: User
+      Set up Face ID or TOTP: 4: User
+      Explore the dashboard: 5: User
+    section Planning a Trip
+      Create a new trip: 5: User
+      Add activities: 4: User
+      Invite participants: 4: User
+    section Booking
+      Browse properties: 5: User
+      Review dynamic pricing: 3: User
+      Confirm & pay: 5: User, Stripe
+      Receive email confirmation: 5: System
+    section Engagement
+      Chat with Gemini AI: 5: User, AI
+      Complete activities for XP: 4: User
+      Level up & earn titles: 5: User
+      Leave feedback: 4: User
+```
+
+### Step-by-Step
 
 1. **Register** a new account or **log in** with existing credentials
 2. **Set up Face ID** or **TOTP 2FA** from your profile for enhanced security
@@ -321,23 +581,156 @@ Incremental migrations are stored in the `database lifeline/` directory and shou
 | `trip_milestones` | Progress milestones within trips |
 | `gamification` | XP, level, and title tracking |
 
+### Database Schema Map
+
+```mermaid
+flowchart TD
+    subgraph "👤 User Domain"
+        U[(users)]
+        G[(gamification)]
+    end
+    
+    subgraph "✈️ Trip Domain"
+        T[(trips)]
+        A[(activities)]
+        TM[(trip_milestones)]
+    end
+    
+    subgraph "🏡 Property Domain"
+        P[(properties)]
+        O[(offers)]
+    end
+    
+    subgraph "📅 Booking Domain"
+        B[(bookings)]
+        BS[(booking_services)]
+        S[(services)]
+    end
+    
+    subgraph "💬 Social Domain"
+        F[(feedback)]
+        C[(comments)]
+        CV[(conversations)]
+        M[(messages)]
+    end
+    
+    U --> G
+    U --> T
+    U --> B
+    U --> F
+    U --> CV
+    T --> A
+    T --> TM
+    T --> B
+    P --> B
+    P --> O
+    B --> BS
+    BS --> S
+    F --> C
+    CV --> M
+
+    style U fill:#3b82f6,color:#fff
+    style T fill:#f59e0b,color:#fff
+    style P fill:#10b981,color:#fff
+    style B fill:#8b5cf6,color:#fff
+    style F fill:#ef4444,color:#fff
+```
+
+---
+
+## Screenshots
+
+> 📸 _Add your application screenshots below. A recommended layout is provided:_
+
+<!--
+### 🔐 Login & Authentication
+| Login | Face ID | TOTP Setup |
+|:---:|:---:|:---:|
+| ![Login](screenshots/login.png) | ![Face ID](screenshots/faceid.png) | ![TOTP](screenshots/totp.png) |
+
+### 🏠 Dashboard & Navigation
+| Dashboard | Dark Mode | Profile |
+|:---:|:---:|:---:|
+| ![Dashboard](screenshots/dashboard.png) | ![Dark](screenshots/dark-mode.png) | ![Profile](screenshots/profile.png) |
+
+### ✈️ Core Features
+| Trip Planning | Booking | AI Chat |
+|:---:|:---:|:---:|
+| ![Trips](screenshots/trips.png) | ![Booking](screenshots/booking.png) | ![AI](screenshots/ai-chat.png) |
+
+### 🛠️ Admin Panel
+| User Management | Properties | Moderation |
+|:---:|:---:|:---:|
+| ![Admin](screenshots/admin.png) | ![Properties](screenshots/admin-properties.png) | ![Moderation](screenshots/moderation.png) |
+-->
+
 ---
 
 ## Contributors
 
 This project was developed as part of the **PIDEV 3A1** coursework at **[ESPRIT](https://esprit.tn/)** (2025–2026).
 
-
-| Name | GitHub |
-|------|--------|
-| Yassine Raddadi | [@github](https://github.com/Apolake) |
-| Dhia Raddaoui | [@github](https://github.com/Dhia-Raddaoui) |
-| Anas Nafti | [@github](https://github.com/navTace) |
-| Youssef Litaiem | [@github](https://github.com/ysfltm) |
-| Omar Ehlal | [@github](https://github.com/omarhlal49) |
-
+<table>
+<tr>
+<td align="center">
+<a href="https://github.com/Apolake">
+<img src="https://github.com/Apolake.png" width="80px;" alt="Yassine Raddadi"/><br />
+<sub><b>Yassine Raddadi</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/Dhia-Raddaoui">
+<img src="https://github.com/Dhia-Raddaoui.png" width="80px;" alt="Dhia Raddaoui"/><br />
+<sub><b>Dhia Raddaoui</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/navTace">
+<img src="https://github.com/navTace.png" width="80px;" alt="Anas Nafti"/><br />
+<sub><b>Anas Nafti</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/ysfltm">
+<img src="https://github.com/ysfltm.png" width="80px;" alt="Youssef Litaiem"/><br />
+<sub><b>Youssef Litaiem</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/omarhlal49">
+<img src="https://github.com/omarhlal49.png" width="80px;" alt="Omar Ehlal"/><br />
+<sub><b>Omar Ehlal</b></sub>
+</a>
+</td>
+</tr>
+</table>
 
 ---
+
+## Quick Start Cheat Sheet
+
+```bash
+# 1. Clone & enter
+git clone https://github.com/your-org/Esprit-PIDEV-3A1-2526-Travelxp.git
+cd Esprit-PIDEV-3A1-2526-Travelxp
+
+# 2. Database
+mysql -u root -p < travelxp.sql
+
+# 3. Configure (edit db.properties with your keys)
+notepad src/main/resources/db.properties
+
+# 4. Build & Run
+mvn clean javafx:run
+```
+
+---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Made_with-☕_Java-orange?style=for-the-badge" alt="Made with Java"/>
+  <img src="https://img.shields.io/badge/Powered_by-🤖_Gemini_AI-4285F4?style=for-the-badge" alt="Powered by Gemini"/>
+  <img src="https://img.shields.io/badge/Built_at-🎓_ESPRIT-E4002B?style=for-the-badge" alt="Built at ESPRIT"/>
+</p>
 
 <p align="center">
   Built with ❤️ at <strong>ESPRIT</strong> — 2025/2026
