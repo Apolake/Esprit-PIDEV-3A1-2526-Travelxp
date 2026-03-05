@@ -695,7 +695,7 @@ flowchart TD
 ### 🏠 Dashboard & Navigation
 | Dashboard | Dark Mode | Profile |
 |:---:|:---:|:---:|
-| ![Dashboard](screenshots/dashboard.png) | ![Dark](screenshots/dark-mode.png) | ![Profile](screenshots/profile.png) |
+| ![Dashboard](screenshots/dashboard.png) | ![Dark](screenshots/dark-mode.png) | ![Feedback](screenshots/feedback.png) |
 
 ### ✈️ Core Features
 | Trip Planning | Booking | AI Chat |
