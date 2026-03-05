@@ -1,74 +1,81 @@
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ActivityController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\AdminDashboardController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\BookingController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ChangePasswordController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\CommentsViewController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\DashboardController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\EditProfileController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\FeedbackController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\GeminiChatController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\LoginController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\MessengerController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ModerationController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\OfferController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ProfileController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\PropertyController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\RegisterController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\ServiceController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\TasksController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\controllers\TripController.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\Main.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Activity.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Booking.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Comment.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Conversation.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Feedback.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Gamification.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Message.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Offer.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Property.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Service.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\Trip.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\TripMilestone.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\User.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\models\UserViewModel.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\ActivityRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\CommentRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\ConversationRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\FeedbackRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\MessageRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\TripMilestoneRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\TripRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\repositories\UserRepository.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\ActivityService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\BookingService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\CancellationPolicyEngine.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\CurrencyExchangeService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\DynamicPricingEngine.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\EmailService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\FaceRecognitionService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\FeedbackService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\GamificationService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\GeminiService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\MessagingService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\NominatimGeocodingService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\OfferService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\OSRMRoutingService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\PropertyRecommendationService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\PropertyService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\ServiceService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\StripeService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\TotpService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\TripMilestoneService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\TripService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\services\UserService.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\UserSession.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\DatabaseInitializer.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\ImageUtil.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\LanguageToolClient.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\LibreTranslateClient.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\MyDB.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\PasswordUtil.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\ProfanityFilter.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\SentimentAnalyzer.java
-C:\Users\dhias\OneDrive\Desktop\Github Repository Stuff\Final Project (Hopefully)\ProjectJavaFx3A1\src\main\java\com\travelxp\utils\ThemeManager.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\ai\TripAIContext.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\ai\TripAIService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\ActivityController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\AdminDashboardController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\BookingController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\ChangePasswordController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\CommentsViewController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\DashboardController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\EditProfileController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\FeedbackController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\GeminiChatController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\LoginController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\MessengerController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\ModerationController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\OfferController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\ProfileController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\PropertyController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\RegisterController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\ServiceController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\TasksController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\TripAIPanelController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\controllers\TripController.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\Main.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Activity.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Booking.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Comment.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Conversation.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Feedback.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Gamification.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Message.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Offer.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Property.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Service.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\Trip.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\TripMilestone.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\User.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\models\UserViewModel.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\ActivityRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\CommentRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\ConversationRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\FeedbackRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\MessageRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\TripMilestoneRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\TripRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\repositories\UserRepository.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\ActivityService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\AIService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\BookingService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\CancellationPolicyEngine.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\CurrencyExchangeService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\DynamicPricingEngine.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\EmailService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\FaceRecognitionService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\FeedbackService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\GamificationService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\GeminiService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\MessagingService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\NominatimGeocodingService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\OfferService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\OpenAIService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\OSRMRoutingService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\PropertyRecommendationService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\PropertyService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\ServiceService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\StripeService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\TotpService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\TripMilestoneService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\TripService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\services\UserService.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\UserSession.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\DatabaseInitializer.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\ImageUtil.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\LanguageToolClient.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\LibreTranslateClient.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\MyDB.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\PasswordUtil.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\ProfanityFilter.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\SentimentAnalyzer.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\ThemeManager.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\com\travelxp\utils\TripChatSessionStore.java
+C:\Users\Otaku\Desktop\project java\Esprit-PIDEV-3A1-2526-Travelxp\src\main\java\module-info.java

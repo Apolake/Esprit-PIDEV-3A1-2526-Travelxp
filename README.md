@@ -24,6 +24,8 @@
   <img src="https://img.shields.io/badge/Services-24-ff69b4" alt="24 Services"/>
   <img src="https://img.shields.io/badge/Models-14-yellow" alt="14 Models"/>
   <img src="https://img.shields.io/badge/Repositories-8-cyan" alt="8 Repositories"/>
+  <img src="https://img.shields.io/badge/Utilities-10-lightgrey" alt="10 Utilities"/>
+  <img src="https://img.shields.io/badge/Views_(FXML)-25-ff8c00" alt="25 Views"/>
   <img src="https://img.shields.io/badge/APIs-7_Integrated-success" alt="7 APIs"/>
 </p>
 
@@ -35,17 +37,22 @@
 - [Highlights at a Glance](#highlights-at-a-glance)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
 - [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Quick Start Cheat Sheet](#quick-start-cheat-sheet)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [API Integrations](#api-integrations)
 - [Database](#database)
 - [Screenshots](#screenshots)
 - [Contributors](#contributors)
-- [Quick Start Cheat Sheet](#quick-start-cheat-sheet)
+- [Academic Context](#academic-context)
+- [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -190,23 +197,33 @@ Dark / Light with smooth transitions
 
 ## Tech Stack
 
-<table>
-<tr><th>Layer</th><th>Technology</th><th>Version</th></tr>
-<tr><td>☕ <b>Language</b></td><td>Java</td><td>25</td></tr>
-<tr><td>🖼️ <b>UI Framework</b></td><td>JavaFX + FXML</td><td>25</td></tr>
-<tr><td>🎨 <b>UI Theme</b></td><td>AtlantaFX</td><td>2.0.1</td></tr>
-<tr><td>🔧 <b>Build Tool</b></td><td>Apache Maven</td><td>3.x</td></tr>
-<tr><td>🗄️ <b>Database</b></td><td>MySQL</td><td>8.x</td></tr>
-<tr><td>🔌 <b>DB Connector</b></td><td>MySQL Connector/J</td><td>8.3.0</td></tr>
-<tr><td>🔐 <b>Authentication</b></td><td>jBCrypt, OpenCV/JavaCV, ZXing</td><td>0.4 · 1.5.10 · 3.5.3</td></tr>
-<tr><td>💳 <b>Payments</b></td><td>Stripe Java SDK</td><td>24.18.0</td></tr>
-<tr><td>🤖 <b>AI</b></td><td>Google Gemini 2.5 Flash</td><td>REST API</td></tr>
-<tr><td>📧 <b>Email</b></td><td>JavaMail (javax.mail)</td><td>1.6.2</td></tr>
-<tr><td>📋 <b>JSON</b></td><td>org.json, Gson</td><td>20231013 · 2.10.1</td></tr>
-<tr><td>📄 <b>PDF</b></td><td>iTextPDF</td><td>—</td></tr>
-<tr><td>📱 <b>SMS</b></td><td>Twilio</td><td>—</td></tr>
-<tr><td>🌐 <b>HTTP</b></td><td>java.net.http, OkHttp</td><td>—</td></tr>
-</table>
+### Frontend
+
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|--------|
+| 🖼️ **UI Framework** | JavaFX + FXML | 25 | Declarative UI with scene graph rendering |
+| 🎨 **Theming** | AtlantaFX | 2.0.1 | Modern dark/light themes (PrimerDark / PrimerLight) |
+| 🖋️ **Fonts & Styling** | CSS + Segoe UI | — | Custom stylesheets with card-based layouts |
+| 📷 **QR Codes** | ZXing (core + javase) | 3.5.3 | QR code generation for TOTP 2FA setup |
+| 🗺️ **Maps** | WebView + Leaflet.js | — | Interactive map rendering via embedded browser |
+
+### Backend
+
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|--------|
+| ☕ **Language** | Java | 25 | Core platform with JPMS module system |
+| 🔧 **Build Tool** | Apache Maven | 3.x | Dependency management & build lifecycle |
+| 🗄️ **Database** | MySQL | 8.x | Relational data storage |
+| 🔌 **DB Connector** | MySQL Connector/J | 8.3.0 | JDBC driver for MySQL |
+| 🔐 **Password Hashing** | jBCrypt | 0.4 | BCrypt credential hashing |
+| 📷 **Face Recognition** | JavaCV (OpenCV) | 1.5.10 | LBPH biometric authentication via webcam |
+| 💳 **Payments** | Stripe Java SDK | 24.18.0 | Secure checkout & wallet top-up |
+| 🤖 **AI** | Google Gemini 2.5 Flash | REST API | AI chatbot & trip planning assistant |
+| 📧 **Email** | JavaMail (javax.mail) | 1.6.2 | SMTP transactional emails |
+| 📱 **SMS** | Twilio | — | SMS notifications |
+| 📋 **JSON** | org.json, Gson | 20231013 · 2.10.1 | API response parsing & serialization |
+| 📄 **PDF** | iTextPDF | — | Booking confirmation & report generation |
+| 🌐 **HTTP** | java.net.http, OkHttp | — | REST API consumption |
 
 ---
 
@@ -216,12 +233,12 @@ The project follows a **layered MVC architecture** with a clean separation of co
 
 ```
 com.travelxp
-├── ai/                  # AI service layer (Gemini, Trip AI)
-├── controllers/         # JavaFX FXML controllers (20 controllers)
-├── models/              # Data models / POJOs (14 models)
-├── repositories/        # Data access layer (8 repositories)
-├── services/            # Business logic layer (24 services)
-└── utils/               # Utilities (DB, profanity filter, sentiment, etc.)
+├── ai/                  # AI service layer (Gemini, Trip AI) — 2 classes
+├── controllers/         # JavaFX FXML controllers — 20 classes
+├── models/              # Data models / POJOs — 14 classes
+├── repositories/        # Data access layer — 8 classes
+├── services/            # Business logic layer — 24 classes
+└── utils/               # Utilities (DB, theming, profanity, sentiment, etc.) — 10 classes
 ```
 
 **Design Patterns Used:**
@@ -395,16 +412,25 @@ gantt
 
 ---
 
-## Prerequisites
+## Getting Started
 
-- **Java JDK 25** (or compatible)
-- **Apache Maven 3.x**
-- **MySQL 8.x** server
-- **Webcam** (optional — required for Face ID feature)
+### Prerequisites
 
----
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| **Java JDK** | 25+ | [Download from Oracle](https://www.oracle.com/java/technologies/downloads/) or use [SDKMAN](https://sdkman.io/) |
+| **Apache Maven** | 3.x | [Installation guide](https://maven.apache.org/install.html) |
+| **MySQL Server** | 8.x | [Download](https://dev.mysql.com/downloads/mysql/) |
+| **Webcam** | — | Optional — required only for Face ID feature |
 
-## Installation
+Verify your setup:
+```bash
+java --version    # Should show 25+
+mvn --version     # Should show 3.x
+mysql --version   # Should show 8.x
+```
+
+### Installation
 
 1. **Clone the repository**
    ```bash
@@ -423,16 +449,14 @@ gantt
    mvn clean install
    ```
 
-4. **Configure the application** (see [Configuration](#configuration))
+4. **Configure the application** (see [Configuration](#configuration) below)
 
 5. **Run the application**
    ```bash
    mvn javafx:run
    ```
 
----
-
-## Configuration
+### Configuration
 
 Edit `src/main/resources/db.properties` to configure the application:
 
@@ -457,6 +481,26 @@ mail.from=your_email@gmail.com
 ```
 
 > **Note:** For Gmail SMTP, use an [App Password](https://support.google.com/accounts/answer/185833) rather than your account password.
+>
+> **Security:** Never commit real API keys or credentials. Use environment variables or a local `.env` file (add it to `.gitignore`).
+
+### Quick Start Cheat Sheet
+
+```bash
+# 1. Clone & enter
+git clone https://github.com/your-org/Esprit-PIDEV-3A1-2526-Travelxp.git
+cd Esprit-PIDEV-3A1-2526-Travelxp
+
+# 2. Database
+mysql -u root -p < travelxp.sql
+
+# 3. Configure (edit db.properties with your keys)
+notepad src/main/resources/db.properties   # Windows
+# nano src/main/resources/db.properties    # Linux/macOS
+
+# 4. Build & Run
+mvn clean javafx:run
+```
 
 ---
 
@@ -668,8 +712,6 @@ flowchart TD
 
 ## Contributors
 
-This project was developed as part of the **PIDEV 3A1** coursework at **[ESPRIT](https://esprit.tn/)** (2025–2026).
-
 <table>
 <tr>
 <td align="center">
@@ -707,22 +749,35 @@ This project was developed as part of the **PIDEV 3A1** coursework at **[ESPRIT]
 
 ---
 
-## Quick Start Cheat Sheet
+## Academic Context
 
-```bash
-# 1. Clone & enter
-git clone https://github.com/your-org/Esprit-PIDEV-3A1-2526-Travelxp.git
-cd Esprit-PIDEV-3A1-2526-Travelxp
+| | |
+|---|---|
+| **Institution** | [ESPRIT — School of Engineering](https://esprit.tn/) (Tunisia) |
+| **Program** | Software Engineering — 3rd Year (3A) |
+| **Course** | PIDEV (Projet Intégré de Développement) — 3A1 |
+| **Academic Year** | 2025–2026 |
+| **Project Type** | Full-stack integrated development project |
+| **Team Size** | 5 members |
 
-# 2. Database
-mysql -u root -p < travelxp.sql
+The **PIDEV** is a capstone-style development project at ESPRIT where students design, implement, and deliver a complete software product covering the full development lifecycle — from requirements gathering and database design through backend logic, UI development, API integration, and deployment.
 
-# 3. Configure (edit db.properties with your keys)
-notepad src/main/resources/db.properties
+---
 
-# 4. Build & Run
-mvn clean javafx:run
-```
+## Acknowledgments
+
+We would like to thank:
+
+- **[ESPRIT](https://esprit.tn/)** — for providing the academic framework and guidance throughout the PIDEV program
+- **Our supervising instructors** — for their mentorship, code reviews, and technical direction
+- **[Google Gemini](https://ai.google.dev/)** — for the AI capabilities powering the chatbot and trip planning assistant
+- **[Stripe](https://stripe.com/)** — for secure payment processing infrastructure
+- **[OpenStreetMap](https://www.openstreetmap.org/) & [Nominatim](https://nominatim.org/)** — for open geocoding and map data
+- **[OSRM](http://project-osrm.org/)** — for open-source routing engine
+- **[LanguageTool](https://languagetool.org/)** — for grammar and spelling checking API
+- **[MyMemory](https://mymemory.translated.net/)** — for the translation API
+- **[AtlantaFX](https://github.com/mkpaz/atlantafx)** — for the modern JavaFX theme library
+- The **open-source community** — for the libraries and tools that made this project possible
 
 ---
 

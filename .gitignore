@@ -7,6 +7,6 @@ target/
 
 # Java
 *.class
-
+*.properties
 # OS
 .DS_Store
